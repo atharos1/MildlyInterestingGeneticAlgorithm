@@ -94,7 +94,7 @@ public class Main {
                 List<Character> children = crossoverMethod.cross(parent1, parent2);
 
                 //TODO se mutan todos los hijos, o con una determinada probabilidad?
-                children.replaceAll(child -> CharacterFactory.random.nextFloat() > MUTATION_PROBABILITY ? mutation.mutate(child) : child);
+                children.replaceAll(child -> MUTATION_PROBABILITY > CharacterFactory.random.nextFloat() ? mutation.mutate(child) : child);
 
                 //Si CANT_CHILDREN impar, agrego solo el primero de los hijos
                 if(i != CANT_CHILDREN - 1)
