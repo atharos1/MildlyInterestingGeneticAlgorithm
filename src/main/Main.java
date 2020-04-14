@@ -33,6 +33,7 @@ public class Main {
         String REPLACEMENT_SELECTOR_1_NAME = "elite";
         String REPLACEMENT_SELECTOR_2_NAME = "elite";
 
+        //Busca archivos TSV en "./args[0]". Cada archivo representa un tipo de objeto. Se puede equipar uno de cada tipo.
         try (Stream<Path> paths = Files.walk(Paths.get(args[0]))) {
             paths
                     .filter(Files::isRegularFile)
