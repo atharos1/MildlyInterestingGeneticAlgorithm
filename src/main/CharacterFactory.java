@@ -23,6 +23,14 @@ public class CharacterFactory {
         return new Character(c, height, items);
     }
 
+    public static int getCharacterPropertyCount() {
+        return itemList.size() + 2;
+    }
+
+    public static int getItemTypeCount() {
+        return itemList.size();
+    }
+
     public static float getHeightRandom() {
         return MIN_HEIGHT + random.nextFloat() * (MAX_HEIGHT - MIN_HEIGHT);
     }

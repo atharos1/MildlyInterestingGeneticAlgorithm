@@ -1,6 +1,8 @@
 package main.Crossover;
 import main.Character;
 
+import java.util.List;
+
 public interface Crossover {
-    Character cross(Character c1, Character c2);
+    List<Character> cross(Character c1, Character c2);
 }
