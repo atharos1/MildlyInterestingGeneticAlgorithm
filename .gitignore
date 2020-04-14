@@ -1,0 +1,25 @@
+# Intellij
+.idea/
+*.iml
+*.iws
+
+# Mac
+.DS_Store
+
+# Maven
+log/
+target/
+
+#Package Files#
+*.jar
+*.war
+*.ear
+*.zip
+*.tar.gz
+*.rar
+
+#Test results
+results/
+
+#Compilation output
+out/

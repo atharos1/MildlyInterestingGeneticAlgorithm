@@ -1,4 +1,6 @@
-public class Character {
+package main;
+
+public class Character implements Comparable<Character> {
 
     /* REPRESENTACIÓN :
         CLASE
@@ -82,7 +84,24 @@ public class Character {
     }
 
     public double calculateDEM() {
-        return 1.9 + Math.pow(2.5*height - 4.16, 4) + Math.pow(2.5*height - 4.16, 2) + 3*height/10;
+        return 1.9 + Math.pow(2.5*height - 4.16, 4) - Math.pow(2.5*height - 4.16, 2) - 3*height/10;
     }
 
+    @Override
+    public int compareTo(Character c) {
+        //TODO no está al revés?
+        return Double.compare(c.fitness, this.fitness);
+    }
+
+    @Override
+    public String toString() {
+        StringBuilder sb = new StringBuilder();
+        sb.append("Class: " + c.name() + "\n");
+        sb.append("Height: " + String.valueOf(height) + "\n");
+        for(int i = 0; i < items.length; i++)
+            sb.append("Item " + i + ". " + items[i].toString() + "\n");
+        sb.append("Fitness: " + fitness);
+
+        return sb.toString();
+    }
 }
