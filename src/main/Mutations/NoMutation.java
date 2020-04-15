@@ -1,4 +1,4 @@
 package main.Mutations;
 
-public class Mutation {
+public class NoMutation {
 }
