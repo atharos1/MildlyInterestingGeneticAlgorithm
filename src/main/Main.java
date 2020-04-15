@@ -2,6 +2,7 @@ package main;
 
 import main.Crossover.Crossover;
 import main.Crossover.SinglePoint;
+import main.Crossover.TwoPoints;
 import main.Mutations.Mutation;
 import main.Mutations.SingleGene;
 import main.Selection.Elite;
@@ -16,10 +17,10 @@ import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        int MAX_GENERATIONS = 10000;
+        int MAX_GENERATIONS = 1000;
 
-        int N = 1000;
-        int CANT_CHILDREN = 700;
+        int N = 100;
+        int CANT_CHILDREN = 70;
 
         float MUTATION_PROBABILITY = 0.4f;
 
@@ -31,7 +32,7 @@ public class Main {
 
         String MUTATION_NAME = "gene";
 
-        String CROSSOVER_NAME = "singlepoint";
+        String CROSSOVER_NAME = "twopoints";
 
         float REPLACEMENT_SELECTOR_1_PROBABILITY = 0f; //b
         String REPLACEMENT_SELECTOR_1_NAME = "elite";
@@ -50,14 +51,12 @@ public class Main {
         for (int i = 0; i < N; i++)
             population.add(CharacterFactory.Random());
 
-        /*for(Character c : population)
-            System.out.println(c.calculateFitness());*/
-
         Map<String, Selector> selectors = new HashMap<>();
         selectors.put("elite", new Elite());
 
         Map<String, Crossover> crossovers = new HashMap<>();
         crossovers.put("singlepoint", new SinglePoint());
+        crossovers.put("twopoints", new TwoPoints());
 
         Map<String, Mutation> mutations = new HashMap<>();
         mutations.put("gene", new SingleGene());

@@ -12,19 +12,18 @@ public class CharacterFactory {
     public static List<List<Item>> itemList = new ArrayList<>();
 
     public static Character Random() {
-        float height = getHeightRandom();
+        Character c = new Character();
 
-        Item[] items = new Item[itemList.size()];
-        for(int i = 0; i < items.length; i++)
-            items[i] = getItemRandom(i);
+        c.setProperty(0, getHeightRandom());
+        c.setProperty(1, getClassRandom());
+        for(int i = 0; i < getItemTypeCount(); i++)
+            c.setProperty(2 + i, getItemRandom(i));
 
-        ClassEnum c = getClassRandom();
-
-        return new Character(c, height, items);
+        return c;
     }
 
     public static int getCharacterPropertyCount() {
-        return itemList.size() + 2;
+        return Character.PropertiesEnum.values().length - 1 + getItemTypeCount();
     }
 
     public static int getItemTypeCount() {

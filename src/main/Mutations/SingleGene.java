@@ -8,16 +8,12 @@ import main.Item;
 public class SingleGene implements Mutation {
     @Override
     public Character mutate(Character c) {
-        int p1 = CharacterFactory.random.nextInt(c.getItems().length + 1);
+        int point = CharacterFactory.random.nextInt(CharacterFactory.getCharacterPropertyCount() - 1);
 
-        float height = p1 != 0 ? c.getHeight() : CharacterFactory.getHeightRandom();
+        Character n = new Character();
+        for(int i = 0; i < CharacterFactory.getCharacterPropertyCount(); i++)
+            n.setProperty(i, i != point ? c.getProperty(i) : null);
 
-        ClassEnum charClass = p1 != 1 ? c.getCharClass() : CharacterFactory.getClassRandom();
-
-        Item[] items = new Item[c.getItems().length];
-        for(int i = 0; i < items.length; i++)
-            items[i] = p1 - 2 != i ? c.getItems()[i] : CharacterFactory.getItemRandom(i);
-
-        return new Character(charClass, height, items);
+        return n;
     }
 }
