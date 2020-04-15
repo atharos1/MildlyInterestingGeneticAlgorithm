@@ -1,9 +1,9 @@
 package main.Mutations;
 
-import main.Character;
-import main.CharacterFactory;
+import main.Character.Character;
+import main.Character.CharacterFactory;
 
-public class Complete extends Mutation {
+public class CompleteMutation extends Mutation {
     @Override
     public Character mutate(Character c) {
         float Pm = CharacterFactory.random.nextFloat();

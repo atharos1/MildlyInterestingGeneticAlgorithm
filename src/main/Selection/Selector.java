@@ -1,6 +1,6 @@
 package main.Selection;
 
-import main.Character;
+import main.Character.Character;
 
 import java.util.List;
 

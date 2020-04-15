@@ -1,5 +1,5 @@
 package main.Crossover;
-import main.Character;
+import main.Character.Character;
 
 import java.util.List;
 

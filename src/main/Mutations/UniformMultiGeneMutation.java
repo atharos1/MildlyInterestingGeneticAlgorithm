@@ -1,12 +1,9 @@
 package main.Mutations;
 
-import main.Character;
-import main.CharacterFactory;
+import main.Character.Character;
+import main.Character.CharacterFactory;
 
-import java.util.HashSet;
-import java.util.Set;
-
-public class UniformMultiGene extends Mutation {
+public class UniformMultiGeneMutation extends Mutation {
     @Override
     public Character mutate(Character c) {
         Character n = new Character();

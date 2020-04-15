@@ -1,4 +1,4 @@
-package main;
+package main.Character;
 
 public enum ClassEnum {
 

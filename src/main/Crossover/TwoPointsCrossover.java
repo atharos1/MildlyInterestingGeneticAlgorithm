@@ -1,14 +1,12 @@
 package main.Crossover;
 
-import main.Character;
-import main.CharacterFactory;
-import main.ClassEnum;
-import main.Item;
+import main.Character.Character;
+import main.Character.CharacterFactory;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class TwoPoints implements Crossover {
+public class TwoPointsCrossover implements Crossover {
     @Override
     public List<Character> cross(Character p1, Character p2) {
         int point1 = CharacterFactory.random.nextInt(CharacterFactory.getCharacterPropertyCount());

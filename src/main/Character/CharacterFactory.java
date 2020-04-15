@@ -1,4 +1,4 @@
-package main;
+package main.Character;
 import java.io.*;
 import java.nio.file.Path;
 import java.util.ArrayList;

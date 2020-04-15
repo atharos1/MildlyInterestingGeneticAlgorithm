@@ -1,25 +1,26 @@
 package main.Selection;
 
-import main.Character;
+import main.Character.Character;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class Elite implements Selector {
+public class EliteSelector implements Selector {
     @Override
     public List<Character> select(List<Character> characters, int K) {
+        List<Character> l = new ArrayList<>();
         if(K <= 0)
-            return new ArrayList<>();
+            return l;
 
         List<Character> orderedCharacters = new ArrayList<>(characters);
-
         Collections.sort(orderedCharacters);
 
-        List<Character> l = new ArrayList<>(orderedCharacters.subList(0, Math.min(orderedCharacters.size(), K)));
-
-        if(K > orderedCharacters.size())
-            l.addAll(this.select(characters, K - characters.size()));
+        for(int i = 0; l.size() <= K && i < orderedCharacters.size(); i++) {
+            int timesToAdd = (int)Math.ceil((float)(K - i)/orderedCharacters.size());
+            for(int j = 0; l.size() <= K && j < timesToAdd; j++)
+                l.add(orderedCharacters.get(i));
+        }
 
         return l;
     }

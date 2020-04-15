@@ -1,12 +1,10 @@
 package main;
 
-import main.Crossover.Crossover;
-import main.Crossover.SinglePoint;
-import main.Crossover.TwoPoints;
-import main.Mutations.Mutation;
-import main.Mutations.SingleGene;
-import main.Selection.Elite;
-import main.Selection.Selector;
+import main.Character.Character;
+import main.Character.CharacterFactory;
+import main.Crossover.*;
+import main.Mutations.*;
+import main.Selection.*;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -17,26 +15,28 @@ import java.util.stream.Stream;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        int MAX_GENERATIONS = 1000;
+        //PARÁMETROS
+        int MAX_GENERATIONS = 10000;
 
         int N = 100;
         int CANT_CHILDREN = 70;
 
-        float MUTATION_PROBABILITY = 0.4f;
+        float MUTATION_PROBABILITY = 0.2f;
 
         boolean FILL_ALL = true;
 
-        float PARENT_SELECTOR_1_PROBABILITY = 0f; //a
+        float PARENT_SELECTOR_1_PROBABILITY = 0.5f; //a
         String PARENT_SELECTOR_1_NAME = "elite";
-        String PARENT_SELECTOR_2_NAME = "elite";
+        String PARENT_SELECTOR_2_NAME = "universal";
 
-        String MUTATION_NAME = "gene";
+        String MUTATION_NAME = "limitedmultigene";
 
         String CROSSOVER_NAME = "twopoints";
 
-        float REPLACEMENT_SELECTOR_1_PROBABILITY = 0f; //b
-        String REPLACEMENT_SELECTOR_1_NAME = "elite";
-        String REPLACEMENT_SELECTOR_2_NAME = "elite";
+        float REPLACEMENT_SELECTOR_1_PROBABILITY = 0.5f; //b
+        String REPLACEMENT_SELECTOR_1_NAME = "roulette";
+        String REPLACEMENT_SELECTOR_2_NAME = "ranking";
+        //PARÁMETROS
 
         //Busca archivos TSV en "./args[0]". Cada archivo representa un tipo de objeto. Se puede equipar uno de cada tipo.
         try (Stream<Path> paths = Files.walk(Paths.get(args[0]))) {
@@ -45,26 +45,43 @@ public class Main {
                     .forEach(CharacterFactory::registerItemType);
         }
 
-        List<Character> population = new ArrayList<>();
+        //LISTADO DE MÉTODOS DE SELECCIÓN
+        Map<String, Selector> selectors = new HashMap<>();
+        selectors.put("elite", new EliteSelector());
+        selectors.put("roulette", new RouletteSelector());
+        selectors.put("universal", new UniversalSelector());
+        selectors.put("ranking", new RankingSelector());
 
+        //LISTADO DE MÉTODOS DE CRUZA
+        Map<String, Crossover> crossovers = new HashMap<>();
+        crossovers.put("singlepoint", new SinglePointCrossover());
+        crossovers.put("twopoints", new TwoPointsCrossover());
+        crossovers.put("anular", new AnularCrossover());
+        crossovers.put("uniform", new UniformCrossover());
+
+        //LISTADO DE MÉTODOS DE MUTACIÓN
+        Map<String, Mutation> mutations = new HashMap<>();
+        mutations.put("none", new NoMutation());
+        mutations.put("singlegene", new SingleGeneMutation());
+        mutations.put("limitedmultigene", new LimitedMultiGeneMutation());
+        mutations.put("uniformmultigene", new UniformMultiGeneMutation());
+        mutations.put("complete", new CompleteMutation());
+
+        //GENERACIÓN DE LA POBLACIÓN INICIAL
+        List<Character> population = new ArrayList<>();
         //TODO Se permiten repetidos?
         for (int i = 0; i < N; i++)
-            population.add(CharacterFactory.Random());
+            population.add(CharacterFactory.getRandomCharacter());
 
-        Map<String, Selector> selectors = new HashMap<>();
-        selectors.put("elite", new Elite());
 
-        Map<String, Crossover> crossovers = new HashMap<>();
-        crossovers.put("singlepoint", new SinglePoint());
-        crossovers.put("twopoints", new TwoPoints());
 
-        Map<String, Mutation> mutations = new HashMap<>();
-        mutations.put("gene", new SingleGene());
+
 
         Selector parentSelector1 = selectors.get(PARENT_SELECTOR_1_NAME);
         Selector parentSelector2 = selectors.get(PARENT_SELECTOR_2_NAME);
 
         Mutation mutation = mutations.get(MUTATION_NAME);
+        mutation.setProbability(MUTATION_PROBABILITY);
 
         Crossover crossoverMethod = crossovers.get(CROSSOVER_NAME);
 
@@ -72,9 +89,6 @@ public class Main {
         Selector replacementSelector2 = selectors.get(REPLACEMENT_SELECTOR_2_NAME);
 
         for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
-            /*Collections.sort(population);
-            System.out.println("Máximo fitness de la generación #" + (generation) + ": " + population.get(0).calculateFitness());*/
-
             //Selecciono CANT_CHILDREN padres
             //TODO un mismo padre se puede reproducir por los dos metodos? Es decir, Method2 evalua a los padres que eligio Method1? Mismo vale para seleccion
             List<Character> parents = parentSelector1.select(population, (int) Math.ceil(CANT_CHILDREN * PARENT_SELECTOR_1_PROBABILITY));
@@ -92,8 +106,8 @@ public class Main {
                 Character parent2 = (i != CANT_CHILDREN - 1) ? parents.get(i+1) : parents.get(CharacterFactory.random.nextInt(CANT_CHILDREN - 1));
                 List<Character> children = crossoverMethod.cross(parent1, parent2);
 
-                //TODO se mutan todos los hijos, o con una determinada probabilidad?
-                children.replaceAll(child -> MUTATION_PROBABILITY > CharacterFactory.random.nextFloat() ? mutation.mutate(child) : child);
+                //Muto
+                children.replaceAll(mutation::mutate);
 
                 //Si CANT_CHILDREN impar, agrego solo el primero de los hijos
                 if(i != CANT_CHILDREN - 1)

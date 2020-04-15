@@ -1,4 +1,4 @@
-package main;
+package main.Character;
 
 public class Item {
     private double strength;
