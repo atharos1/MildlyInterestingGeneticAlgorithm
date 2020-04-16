@@ -19,23 +19,23 @@ public class Main {
         int MAX_GENERATIONS = 10000;
 
         int N = 100;
-        int CANT_CHILDREN = 70;
+        int CANT_CHILDREN = 150;
 
         float MUTATION_PROBABILITY = 0.2f;
 
         boolean FILL_ALL = true;
 
-        float PARENT_SELECTOR_1_PROBABILITY = 0.5f; //a
+        float PARENT_SELECTOR_1_PROBABILITY = 0.6f; //a
         String PARENT_SELECTOR_1_NAME = "elite";
-        String PARENT_SELECTOR_2_NAME = "universal";
+        String PARENT_SELECTOR_2_NAME = "roulette";
 
-        String MUTATION_NAME = "limitedmultigene";
+        String MUTATION_NAME = "singlegene";
 
         String CROSSOVER_NAME = "twopoints";
 
-        float REPLACEMENT_SELECTOR_1_PROBABILITY = 0.5f; //b
-        String REPLACEMENT_SELECTOR_1_NAME = "roulette";
-        String REPLACEMENT_SELECTOR_2_NAME = "ranking";
+        float REPLACEMENT_SELECTOR_1_PROBABILITY = 0.8f; //b
+        String REPLACEMENT_SELECTOR_1_NAME = "elite";
+        String REPLACEMENT_SELECTOR_2_NAME = "universal";
         //PARÁMETROS
 
         //Busca archivos TSV en "./args[0]". Cada archivo representa un tipo de objeto. Se puede equipar uno de cada tipo.
@@ -91,33 +91,43 @@ public class Main {
         for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
             //Selecciono CANT_CHILDREN padres
             //TODO un mismo padre se puede reproducir por los dos metodos? Es decir, Method2 evalua a los padres que eligio Method1? Mismo vale para seleccion
-            List<Character> parents = parentSelector1.select(population, (int) Math.ceil(CANT_CHILDREN * PARENT_SELECTOR_1_PROBABILITY));
+            List<Character> parentList = parentSelector1.select(population, (int) Math.ceil(CANT_CHILDREN * PARENT_SELECTOR_1_PROBABILITY));
             //population.removeAll(parents);
-            parents.addAll(parentSelector2.select(population, (int) Math.floor(CANT_CHILDREN * (1 - PARENT_SELECTOR_1_PROBABILITY))));
-            Collections.shuffle(parents);
+            parentList.addAll(parentSelector2.select(population, (int) Math.floor(CANT_CHILDREN * (1 - PARENT_SELECTOR_1_PROBABILITY))));
+            Collections.shuffle(parentList);
 
             //TODO Un personaje que no fue elegido como padre nunca puede reproducirse?
             //TODO Puede ser que cantidad de hijos (K) > N? Que sentido tiene FILL-PARENT?
             List<Character> nextGenCandidates = new ArrayList<>();
 
             //Genero CANT_CHILDREN hijos. Si CANT_CHILDREN es impar, el último se reproduce con un elemento al azar
-            for (int i = 0; i < CANT_CHILDREN; i += 2) {
-                Character parent1 = parents.get(i);
-                Character parent2 = (i != CANT_CHILDREN - 1) ? parents.get(i+1) : parents.get(CharacterFactory.random.nextInt(CANT_CHILDREN - 1));
-                List<Character> children = crossoverMethod.cross(parent1, parent2);
+            int parentIndex = 0;
+            Character[] selectedParents = new Character[2];
+            while(nextGenCandidates.size() < CANT_CHILDREN) {
+                for(int i = 0; i < selectedParents.length; i++) {
+                    if(parentIndex == parentList.size()) {
+                        parentIndex = 0;
+                        Collections.shuffle(parentList);
+                    }
+                    selectedParents[i] = parentList.get(parentIndex);
+                    parentIndex++;
+                }
+
+                List<Character> children = crossoverMethod.cross(selectedParents[0], selectedParents[1]);
 
                 //Muto
                 children.replaceAll(mutation::mutate);
 
                 //Si CANT_CHILDREN impar, agrego solo el primero de los hijos
-                if(i != CANT_CHILDREN - 1)
+                if(nextGenCandidates.size() < CANT_CHILDREN - 1)
                     nextGenCandidates.addAll(children);
                 else
                     nextGenCandidates.add((children.get(0)));
             }
 
+
             if(FILL_ALL) {
-                nextGenCandidates.addAll(parents);
+                nextGenCandidates.addAll(parentList);
                 population = replacementSelector1.select(nextGenCandidates, (int) Math.ceil(N * REPLACEMENT_SELECTOR_1_PROBABILITY));
                 //nextGenCandidates.removeAll(population);
                 population.addAll(replacementSelector2.select(nextGenCandidates, (int) Math.floor(N * (1 - REPLACEMENT_SELECTOR_1_PROBABILITY))));
@@ -126,9 +136,9 @@ public class Main {
                 //nextGenCandidates.removeAll(population);
                 population.addAll(replacementSelector2.select(nextGenCandidates, (int) Math.floor(CANT_CHILDREN * (1 - REPLACEMENT_SELECTOR_1_PROBABILITY))));
 
-                population.addAll(replacementSelector1.select(parents, (int) Math.floor((N-CANT_CHILDREN) * REPLACEMENT_SELECTOR_1_PROBABILITY)));
+                population.addAll(replacementSelector1.select(parentList, (int) Math.floor((N-CANT_CHILDREN) * REPLACEMENT_SELECTOR_1_PROBABILITY)));
                 //parents.removeAll(population);
-                population.addAll(replacementSelector2.select(parents, (int) Math.floor((N-CANT_CHILDREN) * (1 - REPLACEMENT_SELECTOR_1_PROBABILITY))));
+                population.addAll(replacementSelector2.select(parentList, (int) Math.floor((N-CANT_CHILDREN) * (1 - REPLACEMENT_SELECTOR_1_PROBABILITY))));
             }
         }
 
