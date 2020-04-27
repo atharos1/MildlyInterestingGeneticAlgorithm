@@ -208,12 +208,19 @@ public class Character extends GeneticSubject {
         if(propertyIndex >= getPropertyCount() || isPropertyFixed(propertyIndex))
             return;
 
+        setProperty(propertyIndex, generateRandomProperty(propertyIndex));
+    }
+
+    public Object generateRandomProperty(int propertyIndex) {
+        if(propertyIndex >= getPropertyCount() || isPropertyFixed(propertyIndex))
+            return null;
+
         if(propertyIndex == PropertiesEnum.HEIGHT.val)
-            height = getHeightRandom();
+            return getHeightRandom();
         else if(propertyIndex == PropertiesEnum.CLASS.val)
-            charClass = getClassRandom();
+            return getClassRandom();
         else
-            items[propertyIndex - PropertiesEnum.FIRST_ITEM.val] = Item.getRandom(propertyIndex - PropertiesEnum.FIRST_ITEM.val);
+            return Item.getRandom(propertyIndex - PropertiesEnum.FIRST_ITEM.val);
     }
 
     @Override
