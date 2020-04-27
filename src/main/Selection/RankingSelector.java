@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-//TODO Roulette y Universal promedian fitness 24, este promedia fitness 17???
 public class RankingSelector implements Selector {
     @Override
     public List<GeneticSubject> select(List<GeneticSubject> characters, int K) {
@@ -19,8 +18,13 @@ public class RankingSelector implements Selector {
         Collections.sort(orderedCharacters);
 
         double f[] = new double[orderedCharacters.size()];
-        for(int i = 0; i < orderedCharacters.size(); i++)
+        double sum = 0;
+        for(int i = 0; i < orderedCharacters.size(); i++) {
             f[i] = (double)i / orderedCharacters.size();
+            sum += f[i];
+        }
+        for(int i = 0; i < orderedCharacters.size(); i++)
+            f[i] = f[i] / sum;
 
         double r[] = new double[K];
         for(int i = 0; i < K; i++)
@@ -28,12 +32,10 @@ public class RankingSelector implements Selector {
         Arrays.sort(r);
 
         double currQ = 0;
-        double lastQ = 0;
         for(int i = 0; l.size() < K && i < characters.size(); i++) {
-            currQ = f[i] + lastQ;
+            currQ += f[i];
             while(l.size() < K && currQ > r[l.size()])
                 l.add(characters.get(i));
-            lastQ = currQ;
         }
 
         return l;
