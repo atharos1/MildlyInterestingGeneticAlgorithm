@@ -20,7 +20,7 @@ public class DeterministicTournaments implements Selector {
         List<GeneticSubject> copy = new ArrayList<>(subjects);
 
         while(l.size() < K)
-            l.add(Collections.max(selectRandomM(copy, randomSubsetSize)));
+            l.add(Collections.min(selectRandomM(copy, randomSubsetSize)));
 
         return l;
     }

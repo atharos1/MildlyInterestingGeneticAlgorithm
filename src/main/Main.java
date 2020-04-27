@@ -146,10 +146,10 @@ public class Main {
             }
 
             if(shouldContinue && configuration.printBestOnEachGeneration)
-                System.out.println(Collections.max(population).toString());
+                System.out.println(Collections.min(population).toString());
         }
 
-        GeneticSubject bestSubject = Collections.max(population);
+        GeneticSubject bestSubject = Collections.min(population);
 
         System.out.println(bestSubject.toString());
     }

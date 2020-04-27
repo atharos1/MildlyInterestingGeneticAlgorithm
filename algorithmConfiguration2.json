@@ -5,11 +5,11 @@
     "mutationMethods": [
         {
             "name": "singleGene",
-            "probability": 0.2
+            "probability": 0.4
         },
         {
             "name": "complete",
-            "probability": 0.05
+            "probability": 0.1
         }
     ],
     "crossoverMethod": {
@@ -25,7 +25,7 @@
         "method2": {
             "name": "elite"
         },
-        "method1Proportion": 0
+        "method1Proportion": 0.3
     },
     "nextGenerationSelectionMethods": {
         "method1": {
@@ -39,15 +39,9 @@
             }
         },
         "method1Proportion": 0.8,
-        "fillMethod": "all"
+        "fillMethod": "parent"
     },
     "finishCriteria": [
-        {
-            "name": "time",
-            "parameters": {
-                "durationSeconds": 15
-            }
-        },
         {
             "name": "content",
             "parameters": {

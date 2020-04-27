@@ -75,10 +75,7 @@ public class Message extends GeneticSubject {
 
     @Override
     public void randomizeProperty(int propertyIndex) {
-        if(propertyIndex >= getPropertyCount())
-            return;
-
-        currentString[propertyIndex] = getRandomLetter();
+        setProperty(propertyIndex, getRandomLetter());
     }
 
     @Override

@@ -17,7 +17,7 @@ public class ContentFinishCriteria implements FinishCriteria {
 
     @Override
     public boolean shouldFinish(List<GeneticSubject> population) {
-        GeneticSubject bestCurrent = Collections.max(population);
+        GeneticSubject bestCurrent = Collections.min(population);
         if(bestSubject == null || bestCurrent.compareTo(bestSubject) > 0) {
             bestSubject = bestCurrent;
             currentGenerationsWithoutImprovement = 0;

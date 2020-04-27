@@ -21,7 +21,7 @@ public class ProbabilisticTournaments implements Selector {
 
         while(l.size() < K) {
             List<GeneticSubject> selected = selectRandomM(copy, 2);
-            GeneticSubject fittest = Collections.max(selected);
+            GeneticSubject fittest = Collections.min(selected);
             selected.remove(fittest);
             if(GeneticSubject.random.nextFloat() < threshold)
                 l.add(fittest);
