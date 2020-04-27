@@ -11,7 +11,7 @@ log/
 target/
 
 #Package Files#
-*.jar
+#*.jar
 *.war
 *.ear
 *.zip
