@@ -1,7 +1,7 @@
 {
     "generationSize": 3000,
     "cantChildren": 1000,
-    "printBestOnEachGeneration": true,
+    "printBestOnEachGeneration": false,
     "mutationMethods": [
         {
             "name": "singleGene",
@@ -38,10 +38,16 @@
                 "Tc": 2
             }
         },
-        "method1Proportion": 0.8,
-        "fillMethod": "parent"
+        "method1Proportion": 0.7,
+        "fillMethod": "all"
     },
     "finishCriteria": [
+        {
+            "name": "time",
+            "parameters": {
+                "durationSeconds": 120
+            }
+        },
         {
             "name": "content",
             "parameters": {

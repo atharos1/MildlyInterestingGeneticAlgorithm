@@ -112,7 +112,7 @@ public class Character extends GeneticSubject {
     }
 
     public static ClassEnum getClassRandom() {
-        return ClassEnum.values()[random.nextInt(ClassEnum.values().length - 1)];
+        return ClassEnum.values()[random.nextInt(ClassEnum.values().length)];
     }
 
     //Métodos internos para cáculo de atributos

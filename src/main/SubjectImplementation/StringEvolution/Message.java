@@ -111,7 +111,7 @@ public class Message extends GeneticSubject {
     }
 
     private char getRandomLetter() {
-        return alphabet[GeneticSubject.random.nextInt(alphabet.length - 1)];
+        return alphabet[GeneticSubject.random.nextInt(alphabet.length)];
     }
 
     private double calculateFitness() {

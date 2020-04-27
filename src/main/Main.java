@@ -8,6 +8,7 @@ import main.Selection.*;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 
 import main.SubjectImplementation.CharacterCreator.Character;
 import main.SubjectImplementation.CharacterCreator.ClassEnum;
@@ -72,8 +73,8 @@ public class Main {
         Configuration configuration = new Configuration(args[0]);
 
         //Witness explicita la clase que implementa GeneticSubject
-        GeneticSubject witness = new Message();
-        //GeneticSubject witness = new Character();
+        //GeneticSubject witness = new Message();
+        GeneticSubject witness = new Character();
         if(args.length >= 2)
             witness.loadConfigurationFromFile(args[1]);
 
@@ -81,6 +82,8 @@ public class Main {
         List<GeneticSubject> population = new ArrayList<>();
         for (int i = 0; i < configuration.generationSize; i++)
             population.add(witness.getRandom());
+
+        long startTime = System.currentTimeMillis();
 
         boolean shouldContinue = true;
         while(shouldContinue) {
@@ -149,6 +152,18 @@ public class Main {
                 System.out.println(Collections.min(population).toString());
         }
 
+        if(configuration.printBestOnEachGeneration)
+            System.out.println();
+
+        long endTime = System.currentTimeMillis() - startTime;
+        String endTimeString = String.format("%d minutes, %d seconds",
+                TimeUnit.MILLISECONDS.toMinutes(endTime),
+                TimeUnit.MILLISECONDS.toSeconds(endTime) -
+                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime))
+        );
+        System.out.println("Finish. Processing time: " + endTimeString);
+
+        System.out.println("\nBest individual in population:");
         GeneticSubject bestSubject = Collections.min(population);
 
         System.out.println(bestSubject.toString());
