@@ -1,30 +1,24 @@
 package main.Crossover;
 
-import main.Character.Character;
-import main.Character.CharacterFactory;
+import main.GeneticSubject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class SinglePointCrossover implements Crossover {
     @Override
-    public List<Character> cross(Character p1, Character p2) {
-        int point = CharacterFactory.random.nextInt(CharacterFactory.getCharacterPropertyCount() - 1);
+    public List<GeneticSubject> cross(GeneticSubject p1, GeneticSubject p2) {
+        int point = GeneticSubject.random.nextInt(p1.getPropertyCount() - 1);
 
-        Character c1 = new Character();
-        Character c2 = new Character();
+        GeneticSubject c1 = p1.cloneSubject();
+        GeneticSubject c2 = p2.cloneSubject();
 
-        for(int i = 0; i < point; i++) {
-            c1.setProperty(i, p1.getProperty(i));
-            c2.setProperty(i, p2.getProperty(i));
-        }
-
-        for(int i = point; i < CharacterFactory.getCharacterPropertyCount(); i++) {
+        for(int i = point; i < p1.getPropertyCount(); i++) {
             c1.setProperty(i, p2.getProperty(i));
             c2.setProperty(i, p1.getProperty(i));
         }
 
-        List<Character> l = new ArrayList<>();
+        List<GeneticSubject> l = new ArrayList<>();
         l.add(c1);
         l.add(c2);
 

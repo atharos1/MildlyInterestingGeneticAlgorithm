@@ -1,15 +1,19 @@
 package main.Mutations;
 
-import main.Character.Character;
-import main.Character.CharacterFactory;
+import main.GeneticSubject;
 
 public class CompleteMutation extends Mutation {
     @Override
-    public Character mutate(Character c) {
-        float Pm = CharacterFactory.random.nextFloat();
-        if(super.probability < Pm)
+    public GeneticSubject mutate(GeneticSubject c) {
+        if(!super.shouldApply(c) || GeneticSubject.random.nextFloat() > super.probability)
             return c;
 
-        return CharacterFactory.getRandomCharacter();
+        float Pm = GeneticSubject.random.nextFloat();
+        if(super.probability >= Pm)
+            for(int i = 0; i < c.getPropertyCount(); i++)
+                if(!c.isPropertyFixed(i))
+                    c.randomizeProperty(i);
+
+        return c;
     }
 }

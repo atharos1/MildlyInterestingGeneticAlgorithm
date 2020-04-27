@@ -1,23 +1,22 @@
 package main.Selection;
 
-import main.Character.Character;
-import main.Character.CharacterFactory;
+import main.GeneticSubject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class UniversalSelector implements Selector {
     @Override
-    public List<Character> select(List<Character> characters, int K) {
-        List<Character> l = new ArrayList<>();
+    public List<GeneticSubject> select(List<GeneticSubject> characters, int K) {
+        List<GeneticSubject> l = new ArrayList<>();
         if(K == 0)
             return l;
 
         int fitnessSum = 0;
-        for(Character c : characters)
+        for(GeneticSubject c : characters)
             fitnessSum += c.getFitness();
 
-        double randomR = CharacterFactory.random.nextFloat();
+        double randomR = GeneticSubject.random.nextFloat();
         double r[] = new double[K];
         for(int i = 0; i < K; i++)
             r[i] = (randomR + i) / K;

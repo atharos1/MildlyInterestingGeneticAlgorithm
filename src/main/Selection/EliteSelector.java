@@ -1,6 +1,6 @@
 package main.Selection;
 
-import main.Character.Character;
+import main.GeneticSubject;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -8,12 +8,12 @@ import java.util.List;
 
 public class EliteSelector implements Selector {
     @Override
-    public List<Character> select(List<Character> characters, int K) {
-        List<Character> l = new ArrayList<>();
+    public List<GeneticSubject> select(List<GeneticSubject> characters, int K) {
+        List<GeneticSubject> l = new ArrayList<>();
         if(K <= 0)
             return l;
 
-        List<Character> orderedCharacters = new ArrayList<>(characters);
+        List<GeneticSubject> orderedCharacters = new ArrayList<>(characters);
         Collections.sort(orderedCharacters);
 
         for(int i = 0; l.size() <= K && i < orderedCharacters.size(); i++) {

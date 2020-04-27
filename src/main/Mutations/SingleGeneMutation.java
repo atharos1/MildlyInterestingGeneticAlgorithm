@@ -1,21 +1,15 @@
 package main.Mutations;
 
-import main.Character.Character;
-import main.Character.CharacterFactory;
+import main.GeneticSubject;
 
 public class SingleGeneMutation extends Mutation {
     @Override
-    public Character mutate(Character c) {
-        float Pm = CharacterFactory.random.nextFloat();
-        if(super.probability < Pm)
+    public GeneticSubject mutate(GeneticSubject c) {
+        if(!super.shouldApply(c) || GeneticSubject.random.nextFloat() > super.probability)
             return c;
 
-        int point = CharacterFactory.random.nextInt(CharacterFactory.getCharacterPropertyCount() - 1);
+        c.randomizeProperty(c.getRandomUnfixedPropertyIndex());
 
-        Character n = new Character();
-        for(int i = 0; i < CharacterFactory.getCharacterPropertyCount(); i++)
-            n.setProperty(i, i != point ? c.getProperty(i) : null);
-
-        return n;
+        return c;
     }
 }

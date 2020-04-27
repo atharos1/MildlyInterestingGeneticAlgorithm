@@ -1,7 +1,7 @@
 package main;
 
-import main.Character.Character;
-import main.Character.CharacterFactory;
+import main.SubjectImplementation.*;
+import main.SubjectImplementation.Character;
 import main.Crossover.*;
 import main.Mutations.*;
 import main.Selection.*;
@@ -16,25 +16,25 @@ import java.util.stream.Stream;
 public class Main {
     public static void main(String[] args) throws IOException {
         //PARÁMETROS
+        String CLASS_NAME = "archer";
+
         int MAX_GENERATIONS = 10000;
 
         int N = 100;
         int CANT_CHILDREN = 150;
 
-        float MUTATION_PROBABILITY = 0.2f;
-
-        boolean FILL_ALL = true;
-
         float PARENT_SELECTOR_1_PROBABILITY = 0.6f; //a
         String PARENT_SELECTOR_1_NAME = "elite";
-        String PARENT_SELECTOR_2_NAME = "roulette";
+        String PARENT_SELECTOR_2_NAME = "ranking";
 
+        float MUTATION_PROBABILITY = 0.4f;
         String MUTATION_NAME = "singlegene";
 
-        String CROSSOVER_NAME = "twopoints";
+        String CROSSOVER_NAME = "uniform";
 
+        boolean FILL_ALL = false;
         float REPLACEMENT_SELECTOR_1_PROBABILITY = 0.8f; //b
-        String REPLACEMENT_SELECTOR_1_NAME = "elite";
+        String REPLACEMENT_SELECTOR_1_NAME = "roulette";
         String REPLACEMENT_SELECTOR_2_NAME = "universal";
         //PARÁMETROS
 
@@ -42,8 +42,13 @@ public class Main {
         try (Stream<Path> paths = Files.walk(Paths.get(args[0]))) {
             paths
                     .filter(Files::isRegularFile)
-                    .forEach(CharacterFactory::registerItemType);
+                    .forEach(Item::registerItemType);
         }
+
+        //LISTADO DE CLASES
+        Map<String, ClassEnum> classes = new HashMap<>();
+        for(ClassEnum c : ClassEnum.values())
+            classes.put(c.name().toLowerCase(), c);
 
         //LISTADO DE MÉTODOS DE SELECCIÓN
         Map<String, Selector> selectors = new HashMap<>();
@@ -67,15 +72,14 @@ public class Main {
         mutations.put("uniformmultigene", new UniformMultiGeneMutation());
         mutations.put("complete", new CompleteMutation());
 
+        //Witness explicita la clase que implementa GeneticSubject
+        GeneticSubject witness = new Character();
+        ClassEnum charClass = classes.get(CLASS_NAME);
+        witness.setFixedProperty(Character.PropertiesEnum.CLASS.val, charClass);
         //GENERACIÓN DE LA POBLACIÓN INICIAL
-        List<Character> population = new ArrayList<>();
-        //TODO Se permiten repetidos?
+        List<GeneticSubject> population = new ArrayList<>();
         for (int i = 0; i < N; i++)
-            population.add(CharacterFactory.getRandomCharacter());
-
-
-
-
+            population.add(witness.getRandom());
 
         Selector parentSelector1 = selectors.get(PARENT_SELECTOR_1_NAME);
         Selector parentSelector2 = selectors.get(PARENT_SELECTOR_2_NAME);
@@ -90,19 +94,15 @@ public class Main {
 
         for (int generation = 0; generation < MAX_GENERATIONS; generation++) {
             //Selecciono CANT_CHILDREN padres
-            //TODO un mismo padre se puede reproducir por los dos metodos? Es decir, Method2 evalua a los padres que eligio Method1? Mismo vale para seleccion
-            List<Character> parentList = parentSelector1.select(population, (int) Math.ceil(CANT_CHILDREN * PARENT_SELECTOR_1_PROBABILITY));
-            //population.removeAll(parents);
+            List<GeneticSubject> parentList = parentSelector1.select(population, (int) Math.ceil(CANT_CHILDREN * PARENT_SELECTOR_1_PROBABILITY));
             parentList.addAll(parentSelector2.select(population, (int) Math.floor(CANT_CHILDREN * (1 - PARENT_SELECTOR_1_PROBABILITY))));
             Collections.shuffle(parentList);
 
-            //TODO Un personaje que no fue elegido como padre nunca puede reproducirse?
-            //TODO Puede ser que cantidad de hijos (K) > N? Que sentido tiene FILL-PARENT?
-            List<Character> nextGenCandidates = new ArrayList<>();
+            List<GeneticSubject> nextGenCandidates = new ArrayList<>();
 
             //Genero CANT_CHILDREN hijos. Si CANT_CHILDREN es impar, el último se reproduce con un elemento al azar
             int parentIndex = 0;
-            Character[] selectedParents = new Character[2];
+            GeneticSubject[] selectedParents = new GeneticSubject[2];
             while(nextGenCandidates.size() < CANT_CHILDREN) {
                 for(int i = 0; i < selectedParents.length; i++) {
                     if(parentIndex == parentList.size()) {
@@ -113,7 +113,7 @@ public class Main {
                     parentIndex++;
                 }
 
-                List<Character> children = crossoverMethod.cross(selectedParents[0], selectedParents[1]);
+                List<GeneticSubject> children = crossoverMethod.cross(selectedParents[0], selectedParents[1]);
 
                 //Muto
                 children.replaceAll(mutation::mutate);
@@ -127,25 +127,20 @@ public class Main {
 
 
             if(FILL_ALL) {
-                nextGenCandidates.addAll(parentList);
+                nextGenCandidates.addAll(population);
                 population = replacementSelector1.select(nextGenCandidates, (int) Math.ceil(N * REPLACEMENT_SELECTOR_1_PROBABILITY));
-                //nextGenCandidates.removeAll(population);
                 population.addAll(replacementSelector2.select(nextGenCandidates, (int) Math.floor(N * (1 - REPLACEMENT_SELECTOR_1_PROBABILITY))));
             } else {
                 population = replacementSelector1.select(nextGenCandidates, (int) Math.ceil(CANT_CHILDREN * REPLACEMENT_SELECTOR_1_PROBABILITY));
-                //nextGenCandidates.removeAll(population);
                 population.addAll(replacementSelector2.select(nextGenCandidates, (int) Math.floor(CANT_CHILDREN * (1 - REPLACEMENT_SELECTOR_1_PROBABILITY))));
 
-                population.addAll(replacementSelector1.select(parentList, (int) Math.floor((N-CANT_CHILDREN) * REPLACEMENT_SELECTOR_1_PROBABILITY)));
-                //parents.removeAll(population);
-                population.addAll(replacementSelector2.select(parentList, (int) Math.floor((N-CANT_CHILDREN) * (1 - REPLACEMENT_SELECTOR_1_PROBABILITY))));
+                if(CANT_CHILDREN < N) {
+                    population.addAll(replacementSelector1.select(parentList, (int) Math.floor((N - CANT_CHILDREN) * REPLACEMENT_SELECTOR_1_PROBABILITY)));
+                    population.addAll(replacementSelector2.select(parentList, (int) Math.floor((N - CANT_CHILDREN) * (1 - REPLACEMENT_SELECTOR_1_PROBABILITY))));
+                }
             }
         }
-
-        System.out.println();
-        System.out.println();
-        System.out.println();
-
+        
         Collections.sort(population);
 
         System.out.println(population.get(0).toString());

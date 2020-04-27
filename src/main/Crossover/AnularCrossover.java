@@ -1,32 +1,26 @@
 package main.Crossover;
 
-import main.Character.Character;
-import main.Character.CharacterFactory;
+import main.GeneticSubject;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class AnularCrossover implements Crossover {
     @Override
-    public List<Character> cross(Character p1, Character p2) {
-        int point = CharacterFactory.random.nextInt(CharacterFactory.getCharacterPropertyCount() - 1);
-        int length = CharacterFactory.random.nextInt((int)Math.ceil((float)CharacterFactory.getCharacterPropertyCount() / 2));
+    public List<GeneticSubject> cross(GeneticSubject p1, GeneticSubject p2) {
+        int point = GeneticSubject.random.nextInt(p1.getPropertyCount() - 1);
+        int length = GeneticSubject.random.nextInt((int)Math.ceil((float)p1.getPropertyCount() / 2));
 
-        Character c1 = new Character();
-        Character c2 = new Character();
-
-        for(int i = 0; i < CharacterFactory.getCharacterPropertyCount(); i++) {
-            c1.setProperty(i, p1.getProperty(i));
-            c2.setProperty(i, p2.getProperty(i));
-        }
+        GeneticSubject c1 = p1.cloneSubject();
+        GeneticSubject c2 = p2.cloneSubject();
 
         for(int i = 0; length > 0; length--) {
-            int prop = (i + point) % CharacterFactory.getCharacterPropertyCount();
+            int prop = (i + point) % p1.getPropertyCount();
             c1.setProperty(prop, p2.getProperty(prop));
             c2.setProperty(prop, p1.getProperty(prop));
         }
 
-        List<Character> l = new ArrayList<>();
+        List<GeneticSubject> l = new ArrayList<>();
         l.add(c1);
         l.add(c2);
 

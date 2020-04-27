@@ -1,8 +1,8 @@
 package main.Crossover;
-import main.Character.Character;
+import main.GeneticSubject;
 
 import java.util.List;
 
 public interface Crossover {
-    List<Character> cross(Character p1, Character p2);
+    List<GeneticSubject> cross(GeneticSubject p1, GeneticSubject p2);
 }

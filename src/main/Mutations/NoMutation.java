@@ -1,10 +1,10 @@
 package main.Mutations;
 
-import main.Character.Character;
+import main.GeneticSubject;
 
 public class NoMutation extends Mutation {
     @Override
-    public Character mutate(Character c) {
+    public GeneticSubject mutate(GeneticSubject c) {
         return c;
     }
 }

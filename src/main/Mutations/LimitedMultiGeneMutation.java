@@ -1,7 +1,6 @@
 package main.Mutations;
 
-import main.Character.Character;
-import main.Character.CharacterFactory;
+import main.GeneticSubject;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -9,24 +8,23 @@ import java.util.Set;
 //TODO me tira muy para abajo el promedio de fitness total para iguales parámetros?
 public class LimitedMultiGeneMutation extends Mutation {
     @Override
-    public Character mutate(Character c) {
-        int genesToMutateCount = CharacterFactory.random.nextInt(CharacterFactory.getCharacterPropertyCount());
-
-        Character n = new Character();
+    public GeneticSubject mutate(GeneticSubject c) {
+        if(!super.shouldApply(c))
+            return c;
+        
+        int genesToMutateCount = GeneticSubject.random.nextInt(c.getPropertyCount() - c.getFixedPropertyCount());
 
         Set<Integer> genesToMutate = new HashSet<>();
         while(genesToMutate.size() < genesToMutateCount) {
-            int randomGene = CharacterFactory.random.nextInt(CharacterFactory.getCharacterPropertyCount() - 1);
+            int randomGene = c.getRandomUnfixedPropertyIndex();
             if(!genesToMutate.contains(randomGene)) {
-                if(super.probability > CharacterFactory.random.nextFloat())
-                    n.setProperty(randomGene, null);
-                else
-                    n.setProperty(randomGene, c.getProperty(randomGene));
+                if(super.probability >= GeneticSubject.random.nextFloat())
+                    c.randomizeProperty(randomGene);
 
                 genesToMutate.add(randomGene);
             }
         }
 
-        return n;
+        return c;
     }
 }
