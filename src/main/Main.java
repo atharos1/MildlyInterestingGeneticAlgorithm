@@ -73,8 +73,8 @@ public class Main {
         Configuration configuration = new Configuration(args[0]);
 
         //Witness explicita la clase que implementa GeneticSubject
-        //GeneticSubject witness = new Message();
-        GeneticSubject witness = new Character();
+        GeneticSubject witness = new Message();
+        //GeneticSubject witness = new Character();
         if(args.length >= 2)
             witness.loadConfigurationFromFile(args[1]);
 
@@ -109,16 +109,16 @@ public class Main {
                     parentIndex++;
                 }
 
-                List<GeneticSubject> children = configuration.crossoverMethod.cross(selectedParents[0], selectedParents[1]);
+                List<GeneticSubject> generatedChildren = configuration.crossoverMethod.cross(selectedParents[0], selectedParents[1]);
 
                 for(Mutation mutation : configuration.mutationMethods)
-                    children.replaceAll(mutation::mutate);
+                    generatedChildren.replaceAll(mutation::mutate);
 
                 //Si configuration.cantChildren impar, agrego solo el primero de los hijos
                 if(nextGenCandidates.size() < configuration.cantChildren - 1)
-                    nextGenCandidates.addAll(children);
+                    nextGenCandidates.addAll(generatedChildren);
                 else
-                    nextGenCandidates.add((children.get(0)));
+                    nextGenCandidates.add((generatedChildren.get(0)));
             }
 
             if(configuration.fillAll) {
@@ -128,16 +128,18 @@ public class Main {
                 if(configuration.nextGenerationSelector2 != null)
                     population.addAll(configuration.nextGenerationSelector2.select(nextGenCandidates, (int) Math.floor(configuration.generationSize * (1 - configuration.nextGenerationSelector1Proportion))));
             } else {
-                population = configuration.nextGenerationSelector1.select(nextGenCandidates, (int) Math.ceil(configuration.cantChildren * configuration.nextGenerationSelector1Proportion));
+                int selectedFromChildren = Math.min(configuration.cantChildren, configuration.generationSize);
+
+                population = configuration.nextGenerationSelector1.select(nextGenCandidates, (int) Math.ceil(selectedFromChildren * configuration.nextGenerationSelector1Proportion));
 
                 if(configuration.nextGenerationSelector2 != null)
-                    population.addAll(configuration.nextGenerationSelector2.select(nextGenCandidates, (int) Math.floor(configuration.cantChildren * (1 - configuration.nextGenerationSelector1Proportion))));
+                    population.addAll(configuration.nextGenerationSelector2.select(nextGenCandidates, (int) Math.floor(selectedFromChildren * (1 - configuration.nextGenerationSelector1Proportion))));
 
-                if(configuration.cantChildren < configuration.generationSize) {
-                    population.addAll(configuration.nextGenerationSelector1.select(parentList, (int) Math.floor((configuration.generationSize - configuration.cantChildren) * configuration.nextGenerationSelector1Proportion)));
+                if(selectedFromChildren < configuration.generationSize) {
+                    population.addAll(configuration.nextGenerationSelector1.select(parentList, (int) Math.floor((configuration.generationSize - selectedFromChildren) * configuration.nextGenerationSelector1Proportion)));
 
                     if(configuration.nextGenerationSelector2 != null)
-                        population.addAll(configuration.nextGenerationSelector2.select(parentList, (int) Math.floor((configuration.generationSize - configuration.cantChildren) * (1 - configuration.nextGenerationSelector1Proportion))));
+                        population.addAll(configuration.nextGenerationSelector2.select(parentList, (int) Math.floor((configuration.generationSize - selectedFromChildren) * (1 - configuration.nextGenerationSelector1Proportion))));
                 }
             }
 
