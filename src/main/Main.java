@@ -65,9 +65,6 @@ public class Main {
     }
 
     public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
-        //PARÁMETROS
-        String CLASS_NAME = "archer";
-
         loadGeneticAlgorithmDependencies();
 
         Configuration configuration = new Configuration(args[0]);
@@ -83,7 +80,7 @@ public class Main {
 
         boolean shouldContinue = true;
         while(shouldContinue) {
-            //Selecciono CANT_CHILDREN padres
+            //Selecciono configuration.cantChildren padres
             List<GeneticSubject> parentList = configuration.parentSelector1.select(population, (int) Math.ceil(configuration.cantChildren * configuration.parentSelector1Proportion));
 
             if(configuration.parentSelector2 != null)
@@ -92,7 +89,7 @@ public class Main {
 
             List<GeneticSubject> nextGenCandidates = new ArrayList<>();
 
-            //Genero CANT_CHILDREN hijos. Si CANT_CHILDREN es impar, el último se reproduce con un elemento al azar
+            //Genero configuration.cantChildren hijos. Si CANT_CHILDREN es impar, el último se reproduce con un elemento al azar
             int parentIndex = 0;
             GeneticSubject[] selectedParents = new GeneticSubject[2];
             while(nextGenCandidates.size() < configuration.cantChildren) {
@@ -110,7 +107,7 @@ public class Main {
                 for(Mutation mutation : configuration.mutationMethods)
                     children.replaceAll(mutation::mutate);
 
-                //Si CANT_CHILDREN impar, agrego solo el primero de los hijos
+                //Si configuration.cantChildren impar, agrego solo el primero de los hijos
                 if(nextGenCandidates.size() < configuration.cantChildren - 1)
                     nextGenCandidates.addAll(children);
                 else
@@ -146,8 +143,8 @@ public class Main {
             }
         }
 
-        Collections.sort(population);
+        GeneticSubject bestSubject = Collections.max(population);
 
-        System.out.println(population.get(0).toString());
+        System.out.println(bestSubject.toString());
     }
 }
