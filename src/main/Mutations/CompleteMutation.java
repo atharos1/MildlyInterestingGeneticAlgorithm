@@ -3,6 +3,10 @@ package main.Mutations;
 import main.GeneticSubject;
 
 public class CompleteMutation extends Mutation {
+    public CompleteMutation(float probability) {
+        super(probability);
+    }
+
     @Override
     public GeneticSubject mutate(GeneticSubject c) {
         if(!super.shouldApply(c) || GeneticSubject.random.nextFloat() > super.probability)

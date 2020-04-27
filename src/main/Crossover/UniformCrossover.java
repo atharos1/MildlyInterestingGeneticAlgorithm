@@ -6,7 +6,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class UniformCrossover implements Crossover {
-    private static final float exchangeProbability = 0.5f;
+    public UniformCrossover(float exchangeProbability) {
+        this.exchangeProbability = exchangeProbability;
+    }
+
+    private float exchangeProbability = 0.5f;
 
     @Override
     public List<GeneticSubject> cross(GeneticSubject p1, GeneticSubject p2) {

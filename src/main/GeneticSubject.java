@@ -1,5 +1,6 @@
 package main;
 
+import java.io.IOException;
 import java.util.Random;
 
 public abstract class GeneticSubject implements Comparable<GeneticSubject> {
@@ -23,6 +24,7 @@ public abstract class GeneticSubject implements Comparable<GeneticSubject> {
     public abstract Object getProperty(int index);
     public abstract String toString();
     public abstract GeneticSubject cloneSubject();
+    public abstract void loadConfigurationFromFile(String configurationFile) throws IOException;
 
     public int compareTo(GeneticSubject gs) {
         return Double.compare(gs.getFitness(), this.fitness);

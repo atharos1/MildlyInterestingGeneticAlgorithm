@@ -27,5 +27,14 @@ public enum ClassEnum {
         }
     };
 
+    public static ClassEnum getByName(String className) {
+        if(className.equals("warrior")) return WARRIOR;
+        if(className.equals("archer")) return ARCHER;
+        if(className.equals("defender")) return DEFENDER;
+        if(className.equals("spy")) return SPY;
+
+        return null;
+    }
+
     public abstract double getFitness(double attack, double defense);
 }

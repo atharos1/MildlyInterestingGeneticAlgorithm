@@ -1,7 +1,12 @@
 package main.SubjectImplementation;
 
 import main.GeneticSubject;
+import org.json.JSONArray;
+import org.json.JSONObject;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -234,5 +239,33 @@ public class Character extends GeneticSubject {
             n.setProperty(i, getProperty(i));
 
         return n;
+    }
+
+    @Override
+    public void loadConfigurationFromFile(String configurationFile) throws IOException {
+        String json = new String(Files.readAllBytes(Paths.get(configurationFile)));
+        JSONObject o = new JSONObject(json);
+
+        Item.loadItemsFromTSB(o.getString("itemsPath"));
+
+        if(!o.has("fixedProperties"))
+            return;
+
+        JSONObject fixedProperties = o.getJSONObject("fixedProperties");
+        if(fixedProperties.has("class")) {
+            ClassEnum c = ClassEnum.getByName(fixedProperties.getString("class"));
+            if(c == null) throw new IllegalArgumentException("Invalid class name");
+
+            setFixedProperty(PropertiesEnum.CLASS.val, c);
+        }
+        if(fixedProperties.has("height"))
+            setFixedProperty(PropertiesEnum.HEIGHT.val, fixedProperties.getFloat("height"));
+        if(fixedProperties.has("items")) {
+            JSONArray fixedItems = fixedProperties.getJSONArray("items");
+            for(int i = 0; i < fixedItems.length(); i++) {
+                JSONObject item = fixedItems.getJSONObject(i);
+                setFixedProperty(PropertiesEnum.FIRST_ITEM.val + item.getInt("typeId"), item.getInt("itemId"));
+            }
+        }
     }
 }

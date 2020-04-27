@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class SinglePointCrossover implements Crossover {
+    public SinglePointCrossover() {}
+
     @Override
     public List<GeneticSubject> cross(GeneticSubject p1, GeneticSubject p2) {
         int point = GeneticSubject.random.nextInt(p1.getPropertyCount() - 1);

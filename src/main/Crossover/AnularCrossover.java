@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class AnularCrossover implements Crossover {
+    public AnularCrossover() {}
+
     @Override
     public List<GeneticSubject> cross(GeneticSubject p1, GeneticSubject p2) {
         int point = GeneticSubject.random.nextInt(p1.getPropertyCount() - 1);

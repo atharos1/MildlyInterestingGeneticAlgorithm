@@ -11,7 +11,7 @@ public abstract class Mutation {
         return !c.isEveryPropertyFixed();
     }
 
-    public void setProbability(float probability) {
+    Mutation(float probability) {
         this.probability = probability;
     }
 }

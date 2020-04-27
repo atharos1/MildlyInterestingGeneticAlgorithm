@@ -1,0 +1,53 @@
+{
+    "generationSize": 300,
+    "cantChildren": 280,
+    "mutationMethods": [
+        {
+            "name": "singleGene",
+            "probability": 0.4
+        },
+        {
+            "name": "complete",
+            "probability": 0.1
+        }
+    ],
+    "crossoverMethod": {
+        "name": "uniform",
+        "parameters": {
+            "exchangeProbability": 0.5
+        }
+    },
+    "parentSelectionMethods": {
+        "method1": {
+            "name": "elite"
+        }
+    },
+    "nextGenerationSelectionMethods": {
+        "method1": {
+            "name": "elite"
+        },
+        "method2": {
+            "name": "boltzmann",
+            "parameters": {
+                "T0": 10,
+                "Tc": 2
+            }
+        },
+        "method1Proportion": 0.7,
+        "fillMethod": "all"
+    },
+    "finishCriteria": [
+        {
+            "name": "time",
+            "parameters": {
+                "durationSeconds": 15
+            }
+        },
+        {
+            "name": "content",
+            "parameters": {
+                "generationsWithoutImprovementToFinish": 20
+            }
+        }
+    ]
+}

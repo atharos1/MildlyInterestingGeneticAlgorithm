@@ -12,6 +12,11 @@ public class BoltzmannSelector implements Selector {
     private double Tc = 2.0;
     private int t = 0;
 
+    public BoltzmannSelector(double T0, double Tc) {
+        this.T0 = T0;
+        this.Tc = Tc;
+    }
+
     @Override
     public List<GeneticSubject> select(List<GeneticSubject> characters, int K) {
         List<GeneticSubject> l = new ArrayList<>();

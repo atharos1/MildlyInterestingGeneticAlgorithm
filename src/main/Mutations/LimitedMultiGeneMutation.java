@@ -7,6 +7,10 @@ import java.util.Set;
 
 //TODO me tira muy para abajo el promedio de fitness total para iguales parámetros?
 public class LimitedMultiGeneMutation extends Mutation {
+    public LimitedMultiGeneMutation(float probability) {
+        super(probability);
+    }
+
     @Override
     public GeneticSubject mutate(GeneticSubject c) {
         if(!super.shouldApply(c))

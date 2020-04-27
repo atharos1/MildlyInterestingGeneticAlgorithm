@@ -6,9 +6,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class Item {
     private double strength;
@@ -64,6 +67,17 @@ public class Item {
 
     public static Item getRandom(int typeIndex) {
         return itemList.get(typeIndex).get(GeneticSubject.random.nextInt(itemList.get(typeIndex).size()));
+    }
+
+    public static void loadItemsFromTSB(String path) {
+        //Busca archivos TSV en "./args[0]". Cada archivo representa un tipo de objeto. Se puede equipar uno de cada tipo.
+        try (Stream<Path> paths = Files.walk(Paths.get(path))) {
+            paths
+                    .filter(Files::isRegularFile)
+                    .forEach(Item::registerItemType);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
 
     public static void registerItemType(Path sourcePath) {
