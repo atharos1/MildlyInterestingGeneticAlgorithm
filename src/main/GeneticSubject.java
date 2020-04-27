@@ -4,29 +4,24 @@ import java.io.IOException;
 import java.util.Random;
 
 public abstract class GeneticSubject implements Comparable<GeneticSubject> {
-    public static final Random random = new Random();
+    public static final Random random = new Random(System.currentTimeMillis());
 
-    protected double fitness = 0;
+    public abstract double getFitness();
 
-    public double getFitness() {
-        return fitness;
-    }
+    public abstract GeneticSubject getRandom();
+    public abstract GeneticSubject cloneSubject();
 
     public abstract boolean isPropertyFixed(int propertyIndex);
     public abstract boolean isEveryPropertyFixed();
-    public abstract int getPropertyCount();
     public abstract void setFixedProperty(int propertyIndex, Object value);
     public abstract int getFixedPropertyCount();
     public abstract int getRandomUnfixedPropertyIndex();
-    public abstract GeneticSubject getRandom();
-    public abstract void setProperty(int propertyIndex, Object value);
+
+    public abstract int getPropertyCount();
     public abstract void randomizeProperty(int propertyIndex);
+    public abstract void setProperty(int propertyIndex, Object value);
     public abstract Object getProperty(int index);
     public abstract String toString();
-    public abstract GeneticSubject cloneSubject();
-    public abstract void loadConfigurationFromFile(String configurationFile) throws IOException;
 
-    public int compareTo(GeneticSubject gs) {
-        return Double.compare(gs.getFitness(), this.fitness);
-    }
+    public abstract void loadConfigurationFromFile(String configurationFile) throws IOException;
 }

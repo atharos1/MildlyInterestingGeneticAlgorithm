@@ -14,7 +14,7 @@ public class TimeFinishCriteria implements FinishCriteria {
     }
 
     @Override
-    public boolean shoundFinish(List<GeneticSubject> population) {
+    public boolean shouldFinish(List<GeneticSubject> population) {
         if(startTimeMillis == null)
             startTimeMillis = System.currentTimeMillis();
 

@@ -10,7 +10,7 @@ public class AnularCrossover implements Crossover {
 
     @Override
     public List<GeneticSubject> cross(GeneticSubject p1, GeneticSubject p2) {
-        int point = GeneticSubject.random.nextInt(p1.getPropertyCount() - 1);
+        int point = GeneticSubject.random.nextInt(p1.getPropertyCount());
         int length = GeneticSubject.random.nextInt((int)Math.ceil((float)p1.getPropertyCount() / 2));
 
         GeneticSubject c1 = p1.cloneSubject();

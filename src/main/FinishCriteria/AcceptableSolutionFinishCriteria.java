@@ -14,7 +14,7 @@ public class AcceptableSolutionFinishCriteria implements FinishCriteria {
     }
 
     @Override
-    public boolean shoundFinish(List<GeneticSubject> population) {
+    public boolean shouldFinish(List<GeneticSubject> population) {
         return Collections.max(population).getFitness() >= acceptableFitness;
     }
 }

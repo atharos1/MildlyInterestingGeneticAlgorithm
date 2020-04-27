@@ -10,7 +10,7 @@ public class SinglePointCrossover implements Crossover {
 
     @Override
     public List<GeneticSubject> cross(GeneticSubject p1, GeneticSubject p2) {
-        int point = GeneticSubject.random.nextInt(p1.getPropertyCount() - 1);
+        int point = GeneticSubject.random.nextInt(p1.getPropertyCount());
 
         GeneticSubject c1 = p1.cloneSubject();
         GeneticSubject c2 = p2.cloneSubject();

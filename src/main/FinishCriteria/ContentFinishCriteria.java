@@ -9,20 +9,20 @@ import java.util.List;
 public class ContentFinishCriteria implements FinishCriteria {
     int generationsWithoutImprovementToFinish = 10;
     int currentGenerationsWithoutImprovement = 0;
-    double bestCurrentFitness = 0;
+    GeneticSubject bestSubject = null;
 
     public ContentFinishCriteria(int generationsWithoutImprovementToFinish) {
         this.generationsWithoutImprovementToFinish = generationsWithoutImprovementToFinish;
     }
 
     @Override
-    public boolean shoundFinish(List<GeneticSubject> population) {
-        double generationFitness = Collections.max(population).getFitness();
-        if(generationFitness > bestCurrentFitness) {
-            bestCurrentFitness = generationFitness;
+    public boolean shouldFinish(List<GeneticSubject> population) {
+        GeneticSubject bestCurrent = Collections.max(population);
+        if(bestSubject == null || bestCurrent.compareTo(bestSubject) > 0) {
+            bestSubject = bestCurrent;
             currentGenerationsWithoutImprovement = 0;
-        } else if(generationFitness < bestCurrentFitness) {
-            bestCurrentFitness = 0;
+        } else if(bestCurrent.compareTo(bestSubject) < 0) {
+            bestSubject = null;
             currentGenerationsWithoutImprovement = 0;
         } else {
             currentGenerationsWithoutImprovement++;

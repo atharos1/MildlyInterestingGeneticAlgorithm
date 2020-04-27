@@ -1,23 +1,17 @@
 package main;
 
 import main.FinishCriteria.*;
-import main.SubjectImplementation.*;
-import main.SubjectImplementation.Character;
 import main.Crossover.*;
 import main.Mutations.*;
 import main.Selection.*;
 
 import java.io.IOException;
-import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.*;
-import java.util.stream.Stream;
 
-import org.json.JSONArray;
-import org.json.JSONObject;
+import main.SubjectImplementation.CharacterCreator.Character;
+import main.SubjectImplementation.CharacterCreator.ClassEnum;
+import main.SubjectImplementation.StringEvolution.Message;
 
 public class Main {
 
@@ -28,6 +22,7 @@ public class Main {
     public static Map<String, Class> mutations = null;
 
     static void loadGeneticAlgorithmDependencies() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
+        //TODO falta estructura
         finishCriteria = new HashMap<>();
         finishCriteria.put("time", TimeFinishCriteria.class);
         finishCriteria.put("generationsCount", GenerationsCountFinishCriteria.class);
@@ -44,6 +39,8 @@ public class Main {
         selectors.put("universal", UniversalSelector.class);
         selectors.put("ranking", RankingSelector.class);
         selectors.put("boltzmann", BoltzmannSelector.class);
+        selectors.put("deterministicTournaments", DeterministicTournaments.class);
+        selectors.put("probabilisticTournaments", ProbabilisticTournaments.class);
 
         crossovers = new HashMap<>();
         crossovers.put("singlePoint", SinglePointCrossover.class);
@@ -60,18 +57,25 @@ public class Main {
 
 
 
-    static void loadConfiguration(String connfigurationFile) {
+    static void loadConfiguration(String configurationFile) {
 
     }
 
     public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
+        if(args.length < 1) {
+            System.err.println("Algorithm configuration file path is not optional.");
+            System.exit(-1);
+        }
+
         loadGeneticAlgorithmDependencies();
 
         Configuration configuration = new Configuration(args[0]);
 
         //Witness explicita la clase que implementa GeneticSubject
-        GeneticSubject witness = new Character();
-        witness.loadConfigurationFromFile(args[1]);
+        GeneticSubject witness = new Message();
+        //GeneticSubject witness = new Character();
+        if(args.length >= 2)
+            witness.loadConfigurationFromFile(args[1]);
 
         //GENERACIÓN DE LA POBLACIÓN INICIAL
         List<GeneticSubject> population = new ArrayList<>();
@@ -114,7 +118,6 @@ public class Main {
                     nextGenCandidates.add((children.get(0)));
             }
 
-
             if(configuration.fillAll) {
                 nextGenCandidates.addAll(population);
                 population = configuration.nextGenerationSelector1.select(nextGenCandidates, (int) Math.ceil(configuration.generationSize * configuration.nextGenerationSelector1Proportion));
@@ -136,11 +139,14 @@ public class Main {
             }
 
             for(FinishCriteria f : configuration.finishCriteria) {
-                if (f.shoundFinish(population)) {
+                if (f.shouldFinish(population)) {
                     shouldContinue = false;
                     break;
                 }
             }
+
+            if(shouldContinue && configuration.printBestOnEachGeneration)
+                System.out.println(Collections.max(population).toString());
         }
 
         GeneticSubject bestSubject = Collections.max(population);

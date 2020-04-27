@@ -1,6 +1,6 @@
 {
-    "itemsPath": "data",
+    "itemsPath": "items/full",
     "fixedProperties": {
-        "class": "warrior"
+        "class": "archer"
     }
 }

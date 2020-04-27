@@ -1,27 +1,31 @@
 {
-    "generationSize": 300,
-    "cantChildren": 280,
-    "printBestOnEachGeneration": false,
+    "generationSize": 3000,
+    "cantChildren": 1000,
+    "printBestOnEachGeneration": true,
     "mutationMethods": [
         {
             "name": "singleGene",
-            "probability": 0.4
+            "probability": 0.2
         },
         {
             "name": "complete",
-            "probability": 0.1
+            "probability": 0.05
         }
     ],
     "crossoverMethod": {
-        "name": "uniform",
-        "parameters": {
-            "exchangeProbability": 0.5
-        }
+        "name": "anular"
     },
     "parentSelectionMethods": {
         "method1": {
+            "name": "deterministicTournaments",
+            "parameters": {
+                "randomSubsetSize": 200
+            }
+        },
+        "method2": {
             "name": "elite"
-        }
+        },
+        "method1Proportion": 0
     },
     "nextGenerationSelectionMethods": {
         "method1": {
@@ -34,7 +38,7 @@
                 "Tc": 2
             }
         },
-        "method1Proportion": 0.7,
+        "method1Proportion": 0.8,
         "fillMethod": "all"
     },
     "finishCriteria": [
@@ -47,7 +51,7 @@
         {
             "name": "content",
             "parameters": {
-                "generationsWithoutImprovementToFinish": 20
+                "generationsWithoutImprovementToFinish": 1000
             }
         }
     ]

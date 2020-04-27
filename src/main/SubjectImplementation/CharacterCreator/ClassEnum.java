@@ -1,4 +1,4 @@
-package main.SubjectImplementation;
+package main.SubjectImplementation.CharacterCreator;
 
 public enum ClassEnum {
 

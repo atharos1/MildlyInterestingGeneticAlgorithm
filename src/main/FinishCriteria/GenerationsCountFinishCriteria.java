@@ -13,7 +13,7 @@ public class GenerationsCountFinishCriteria implements FinishCriteria {
     }
 
     @Override
-    public boolean shoundFinish(List<GeneticSubject> population) {
+    public boolean shouldFinish(List<GeneticSubject> population) {
         return maxGeneration == currGeneration++;
     }
 }

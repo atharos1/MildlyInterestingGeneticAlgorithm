@@ -1,4 +1,4 @@
-package main.SubjectImplementation;
+package main.SubjectImplementation.CharacterCreator;
 
 import main.GeneticSubject;
 import org.json.JSONArray;
@@ -11,6 +11,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class Character extends GeneticSubject {
+    @Override
+    public int compareTo(GeneticSubject gs) {
+        return Double.compare(gs.getFitness(), this.getFitness());
+    }
+
     public enum PropertiesEnum {
         HEIGHT(0),
         CLASS(1),
@@ -46,6 +51,8 @@ public class Character extends GeneticSubject {
 
     private static final float MIN_HEIGHT = 1.3f;
     private static final float MAX_HEIGHT = 2.0f;
+
+    private double fitness = 0;
 
     private Character(boolean randomize) {
         items = new Item[Item.getTypeCount()];
@@ -97,7 +104,7 @@ public class Character extends GeneticSubject {
         else if(index >= PropertiesEnum.FIRST_ITEM.val)
             onItemChanged();
 
-        super.fitness = calculateFitness();
+        fitness = calculateFitness();
     }
 
     public static float getHeightRandom() {
@@ -134,8 +141,6 @@ public class Character extends GeneticSubject {
     }
     //Métodos internos para el cálculo de atributos
 
-
-
     @Override
     public int getPropertyCount() {
         return PropertiesEnum.values().length - 1 + Item.getTypeCount();
@@ -170,10 +175,15 @@ public class Character extends GeneticSubject {
             return -1;
 
         while(true) {
-            int propertyIndex = random.nextInt(getPropertyCount() - 1);
+            int propertyIndex = random.nextInt(getPropertyCount());
             if(!isPropertyFixed(propertyIndex))
                 return propertyIndex;
         }
+    }
+
+    @Override
+    public double getFitness() {
+        return fitness;
     }
 
     @Override

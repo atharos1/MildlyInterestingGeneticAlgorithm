@@ -21,5 +21,8 @@ target/
 #Test results
 results/
 
+#Items full data
+items/full/*
+
 #Compilation output
 out/

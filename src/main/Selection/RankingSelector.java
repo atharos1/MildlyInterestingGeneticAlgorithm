@@ -9,12 +9,12 @@ import java.util.List;
 
 public class RankingSelector implements Selector {
     @Override
-    public List<GeneticSubject> select(List<GeneticSubject> characters, int K) {
+    public List<GeneticSubject> select(List<GeneticSubject> subjects, int K) {
         List<GeneticSubject> l = new ArrayList<>();
         if(K == 0)
             return l;
 
-        List<GeneticSubject> orderedCharacters = new ArrayList<>(characters);
+        List<GeneticSubject> orderedCharacters = new ArrayList<>(subjects);
         Collections.sort(orderedCharacters);
 
         double f[] = new double[orderedCharacters.size()];
@@ -32,10 +32,10 @@ public class RankingSelector implements Selector {
         Arrays.sort(r);
 
         double currQ = 0;
-        for(int i = 0; l.size() < K && i < characters.size(); i++) {
+        for(int i = 0; l.size() < K && i < subjects.size(); i++) {
             currQ += f[i];
             while(l.size() < K && currQ > r[l.size()])
-                l.add(characters.get(i));
+                l.add(subjects.get(i));
         }
 
         return l;
