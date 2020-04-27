@@ -24,7 +24,7 @@ public class Main {
         int CANT_CHILDREN = 150;
 
         float PARENT_SELECTOR_1_PROBABILITY = 0.6f; //a
-        String PARENT_SELECTOR_1_NAME = "boltzmann";
+        String PARENT_SELECTOR_1_NAME = "elite";
         String PARENT_SELECTOR_2_NAME = "ranking";
 
         float MUTATION_PROBABILITY = 0.4f;
@@ -56,7 +56,7 @@ public class Main {
         selectors.put("roulette", new RouletteSelector());
         selectors.put("universal", new UniversalSelector());
         selectors.put("ranking", new RankingSelector());
-        selectors.put("boltzmann", new RankingSelector());
+        selectors.put("boltzmann", new BoltzmannSelector());
 
         //LISTADO DE MÉTODOS DE CRUZA
         Map<String, Crossover> crossovers = new HashMap<>();
