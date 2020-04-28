@@ -20,7 +20,7 @@ public class RankingSelector implements Selector {
         double f[] = new double[orderedCharacters.size()];
         double sum = 0;
         for(int i = 0; i < orderedCharacters.size(); i++) {
-            f[i] = (double)i / orderedCharacters.size();
+            f[i] = (double)(orderedCharacters.size() - i) / orderedCharacters.size();
             sum += f[i];
         }
         for(int i = 0; i < orderedCharacters.size(); i++)
@@ -32,10 +32,10 @@ public class RankingSelector implements Selector {
         Arrays.sort(r);
 
         double currQ = 0;
-        for(int i = 0; l.size() < K && i < subjects.size(); i++) {
+        for(int i = 0; l.size() < K && i < orderedCharacters.size(); i++) {
             currQ += f[i];
             while(l.size() < K && currQ > r[l.size()])
-                l.add(subjects.get(i));
+                l.add(orderedCharacters.get(i));
         }
 
         return l;

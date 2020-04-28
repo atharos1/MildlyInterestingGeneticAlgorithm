@@ -23,29 +23,27 @@ public class BoltzmannSelector implements Selector {
         if(K == 0)
             return l;
 
-        List<GeneticSubject> orderedCharacters = new ArrayList<>(subjects);
-        Collections.sort(orderedCharacters);
-
         double r[] = new double[K];
         for(int i = 0; i < K; i++)
             r[i] = GeneticSubject.random.nextFloat();
         Arrays.sort(r);
 
-        double f[] = new double[orderedCharacters.size()];
+        double f[] = new double[subjects.size()];
         double sum = 0;
         double T = getT();
-        for(int i = 0; i < orderedCharacters.size(); i++) {
-            f[i] = Math.exp(orderedCharacters.get(i).getFitness() / T);
+        for(int i = 0; i < subjects.size(); i++) {
+            f[i] = Math.exp(subjects.get(i).getFitness() / T);
             sum += f[i];
         }
-        for(int i = 0; i < orderedCharacters.size(); i++)
+        for(int i = 0; i < subjects.size(); i++)
             f[i] = f[i] / sum;
 
         double currQ = 0;
         for(int i = 0; l.size() < K && i < subjects.size(); i++) {
             currQ += f[i];
-            while(l.size() < K && currQ > r[l.size()])
+            while(l.size() < K && currQ > r[l.size()]) {
                 l.add(subjects.get(i));
+            }
         }
 
         return l;

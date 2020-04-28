@@ -74,7 +74,7 @@ public class Message extends GeneticSubject {
     @Override
     public double getFitness() {
         //fitness = calculateFitness();
-        return fitness;
+        return 1000 / (1 + calculateFitness());
     }
 
     @Override
@@ -132,7 +132,7 @@ public class Message extends GeneticSubject {
 
     @Override
     public int compareTo(GeneticSubject gs) {
-        return Double.compare(this.getFitness(), gs.getFitness());
+        return Double.compare(gs.getFitness(), this.getFitness());
     }
 
     private char getRandomLetter() {

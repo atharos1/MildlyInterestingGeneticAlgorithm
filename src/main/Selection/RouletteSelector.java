@@ -13,7 +13,7 @@ public class RouletteSelector implements Selector {
         if(K == 0)
             return l;
 
-        int fitnessSum = 0;
+        double fitnessSum = 0;
         for(GeneticSubject c : subjects)
             fitnessSum += c.getFitness();
 

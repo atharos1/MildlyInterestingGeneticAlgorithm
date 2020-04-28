@@ -1,10 +1,9 @@
 import matplotlib.pyplot as plt
 
 with open('data.dat', 'r') as f:
-    y = f.read().splitlines()
-    #x = [item for item in range(0, len(y))] 
+    y = [float(line) for line in f.read().splitlines()]
 
-    plt.plot(y)
+    plt.plot(y, 'ro')
     plt.ylabel('Fitness')
     plt.xlabel('Iteración')
     plt.show()
