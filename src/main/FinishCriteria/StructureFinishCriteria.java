@@ -19,6 +19,7 @@ public class StructureFinishCriteria implements FinishCriteria {
     @Override
     public boolean shouldFinish(List<GeneticSubject> population) {
         List<GeneticSubject> thisGeneration = new ArrayList<>(population);
+
         Collections.sort(thisGeneration);
 
         if(lastGeneration != null) {
