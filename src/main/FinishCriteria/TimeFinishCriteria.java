@@ -23,7 +23,7 @@ public class TimeFinishCriteria implements FinishCriteria {
 
     @Override
     public String toString() {
-        return "Finished after processing during " + TimeUnit.MILLISECONDS.toSeconds(durationMillis) + " seconds.";
+        return "Finished because processing time exceeded " + TimeUnit.MILLISECONDS.toSeconds(durationMillis) + " seconds.";
     }
 
     @Override

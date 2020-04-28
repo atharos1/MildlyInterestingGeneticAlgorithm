@@ -20,7 +20,7 @@ public class AcceptableSolutionFinishCriteria implements FinishCriteria {
 
     @Override
     public String toString() {
-        return "Finished after fitness surpassed acceptable value of " + acceptableFitness + ".";
+        return "Finished because acceptable fitness value of " + acceptableFitness + " was reached.";
     }
 
     @Override

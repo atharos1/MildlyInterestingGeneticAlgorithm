@@ -37,6 +37,8 @@ public class Configuration {
     public boolean fillAll = false;
 
     public boolean printBestOnEachGeneration = false;
+    public boolean printEndingInformation = true;
+    public boolean printBestFitnessEvolution = false;
 
     public Configuration(String configurationFile) {
         String json = null;
@@ -57,6 +59,12 @@ public class Configuration {
 
         if(o.has("printBestOnEachGeneration"))
             printBestOnEachGeneration = o.getBoolean("printBestOnEachGeneration");
+
+        if(o.has("printEndingInformation"))
+            printEndingInformation = o.getBoolean("printEndingInformation");
+
+        if(o.has("printBestFitnessEvolution"))
+            printBestFitnessEvolution = o.getBoolean("printBestFitnessEvolution");
 
         try {
             cantChildren = o.getInt("cantChildren");

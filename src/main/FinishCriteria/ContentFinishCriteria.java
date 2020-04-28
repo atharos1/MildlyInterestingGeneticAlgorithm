@@ -33,7 +33,7 @@ public class ContentFinishCriteria implements FinishCriteria {
 
     @Override
     public String toString() {
-        return "Finished after " + generationsWithoutImprovementToFinish + " generations without Fitness improvements.";
+        return "Finished because " + generationsWithoutImprovementToFinish + " generations passed without Fitness improvements.";
     }
 
     @Override

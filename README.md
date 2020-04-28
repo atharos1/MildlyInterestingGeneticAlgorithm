@@ -21,6 +21,10 @@ The second one is passed to the custom _GeneticSubject_ implementation's _loadCo
 
 >_**printBestOnEachGeneration**_ (Boolean): defines wheter each generation's best subject must be printed.
 
+>_**printEndingInformation**_ (Boolean): defines wheter the most optimized subject should be printed at the end of the algorithm's execution.
+
+>_**printBestFitnessEvolution**_ (Boolean): defines wheter an array containing each generation's best fitness should be printed at the end of the algorithm's execution.
+
 >_**crossoverMethod**_ (Object): defines the crossover method to be used and it's parameters.
 >>_**name**_ (String, ["_uniform_", | "_singlePoint_" | "_twoPoints_" | "_anular_"]): name of the method as defined by the _crossovers_ map in the _Main_ class method _loadGeneticAlgorithmDependencies_.
 >> When _name_ equals _uniform_, an object named **_parameters_**, containing the following properties, is also required:
@@ -81,9 +85,12 @@ This is an implementation-specific second configuration file structure, written 
 >>_**itemsPath**_ (String, A valid path from the program's working directory): Path to the folder that contains items's _tsb_ files. Each file will account from an item type, and consequently, a new _Character_ property.
 >
 >>_**fixedProperties**_ (Array of Objects): Allows for _Character_ properties to be fixed to a value through the program's execution.
->>> _**class**_ (String, ["_warrior_", "_archer_", "_defender_", "_spy_"]: The name of the desidered class as defined in the _ClassEnum_ enum.
+>>_**propertyIndex**_ (_#Properties_ > Integer > 0): defines the property that the tolerance is defined for.
+>
+>>_**delta**_ (Double > 0): defines the tolerance value.
+
 
 >_**propertiesComparatorDeltas**_ (Array of Objects, one per custom-implementation _GeneticSubject_ property): defines the tolerance, or delta, that is used to decide if two non-equal values of the same property are similar. Each object in the array is defined as follows.
 >>_**propertyIndex**_ (_#Properties_ > Integer > 0): defines the property that the tolerance is defined for.
 >
->>_**delta**_ (Double > 0): defines the tolerance value.
+>>_**value**_ (Implemented property's type, String for _charClass_): defines fixed property's value.

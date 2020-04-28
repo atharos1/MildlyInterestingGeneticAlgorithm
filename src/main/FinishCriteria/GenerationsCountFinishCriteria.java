@@ -19,7 +19,7 @@ public class GenerationsCountFinishCriteria implements FinishCriteria {
 
     @Override
     public String toString() {
-        return "Finished after processing " + currGeneration + " generations.";
+        return "Finished because " + currGeneration + " generations were processed.";
     }
 
     @Override

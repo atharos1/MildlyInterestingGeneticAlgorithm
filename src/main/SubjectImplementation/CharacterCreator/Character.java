@@ -172,6 +172,13 @@ public class Character extends GeneticSubject {
         if(propertyIndex >= getPropertyCount())
             return;
 
+        if(propertyIndex == PropertiesEnum.CLASS.val && value instanceof String) {
+            value = ClassEnum.getByName((String)value);
+            if(value == null) throw new IllegalArgumentException("Invalid class name");
+        } else if(propertyIndex >= PropertiesEnum.FIRST_ITEM.val && value instanceof Integer) {
+            value = Item.get(propertyIndex - PropertiesEnum.FIRST_ITEM.val, (int)value);
+        }
+
         fixedProperties.put(propertyIndex, value);
     }
 
@@ -319,32 +326,22 @@ public class Character extends GeneticSubject {
 
         Item.loadItemsFromTSB(implementationParameters.getString("itemsPath"));
 
-        if(implementationParameters.has("fixedProperties")) {
-            JSONObject fixedProperties = implementationParameters.getJSONObject("fixedProperties");
-            if(fixedProperties.has("class")) {
-                ClassEnum c = ClassEnum.getByName(fixedProperties.getString("class"));
-                if(c == null) throw new IllegalArgumentException("Invalid class name");
-
-                setFixedProperty(PropertiesEnum.CLASS.val, c);
-            }
-            if(fixedProperties.has("height"))
-                setFixedProperty(PropertiesEnum.HEIGHT.val, fixedProperties.getFloat("height"));
-            if(fixedProperties.has("items")) {
-                JSONArray fixedItems = fixedProperties.getJSONArray("items");
-                for(int i = 0; i < fixedItems.length(); i++) {
-                    JSONObject item = fixedItems.getJSONObject(i);
-                    setFixedProperty(PropertiesEnum.FIRST_ITEM.val + item.getInt("typeId"), item.getInt("itemId"));
-                }
+        if(o.has("fixedProperties")) {
+            JSONArray fixedProperties = o.getJSONArray("fixedProperties");
+            for(int i = 0; i < fixedProperties.length(); i++) {
+                JSONObject fixedProperty = fixedProperties.getJSONObject(i);
+                int propertyIndex = fixedProperty.getInt("propertyIndex");
+                Object value = fixedProperty.get("value");
+                setFixedProperty(propertyIndex, value);
             }
         }
 
-        if(!o.has("propertiesComparatorDeltas"))
-            return;
-
-        JSONArray propertiesComparatorDeltasArray = o.getJSONArray("propertiesComparatorDeltas");
-        for(int i = 0; i < propertiesComparatorDeltasArray.length(); i++) {
-            JSONObject propertyComparatorDelta = propertiesComparatorDeltasArray.getJSONObject(i);
-            propertyComparatorDeltas.put(propertyComparatorDelta.getInt("propertyIndex"), propertyComparatorDelta.getDouble("delta"));
+        if(o.has("propertiesComparatorDeltas")) {
+            JSONArray propertiesComparatorDeltasArray = o.getJSONArray("propertiesComparatorDeltas");
+            for(int i = 0; i < propertiesComparatorDeltasArray.length(); i++) {
+                JSONObject propertyComparatorDelta = propertiesComparatorDeltasArray.getJSONObject(i);
+                propertyComparatorDeltas.put(propertyComparatorDelta.getInt("propertyIndex"), propertyComparatorDelta.getDouble("delta"));
+            }
         }
     }
 }

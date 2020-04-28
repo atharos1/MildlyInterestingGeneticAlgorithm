@@ -45,7 +45,7 @@ public class StructureFinishCriteria implements FinishCriteria {
 
     @Override
     public String toString() {
-        return "Finished because the best " + numberOfSubjectsToCompare + " remained similar after " + comparableGenerationsBeforeFinish + " generations.";
+        return "Finished because the best " + numberOfSubjectsToCompare + " remained similar for " + comparableGenerationsBeforeFinish + " generations.";
     }
 
     @Override

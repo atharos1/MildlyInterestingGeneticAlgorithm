@@ -74,9 +74,9 @@ public class Main {
         //GeneticSubject witness = new Message();
         GeneticSubject witness = new Character();
         if(args.length >= 2) {
-            System.out.println("Loading implementation-specific GeneticSubject configuration...");
+            System.out.println("Loading implementation-specific configuration for class + " + witness.getClass().getName() + "...");
             witness.loadConfigurationFromFile(args[1]);
-            System.out.println("Implementation-specific GeneticSubject configuration loaded.\n");
+            System.out.println("Implementation-specific configuration loaded.\n");
         }
 
         System.out.println("Creating random initial population...");
@@ -89,13 +89,20 @@ public class Main {
         System.out.println("Evolution started.\n");
         long processingStartTime = System.currentTimeMillis();
 
-        long currGen = 0;
+        List<Double> bestFitnessList = new ArrayList<>();
+        long currGen = 1;
         boolean shouldContinue = true;
         while(shouldContinue) {
-            if(configuration.printBestOnEachGeneration) {
+            if(configuration.printBestOnEachGeneration || configuration.printBestFitnessEvolution) {
                 GeneticSubject bestSubject = Collections.min(population);
-                System.out.println("Generation " + currGen + ". Best archived fitness: " + bestSubject.getFitness() + ".");
-                System.out.println(bestSubject.toString());
+
+                if(configuration.printBestFitnessEvolution)
+                    bestFitnessList.add(bestSubject.getFitness());
+
+                if(configuration.printBestOnEachGeneration) {
+                    System.out.println("Generation " + currGen + ". Best archived fitness: " + bestSubject.getFitness() + ".");
+                    System.out.println(bestSubject.toString());
+                }
             }
 
             //Selecciono configuration.cantChildren padres
@@ -164,6 +171,8 @@ public class Main {
                     System.out.println("Finishing criteria " + f.getName() + " was met. Processing stopped.");
                     System.out.println(f.toString());
 
+                    System.out.println();
+
                     break;
                 }
             }
@@ -172,15 +181,34 @@ public class Main {
         }
 
         GeneticSubject bestSubject = Collections.min(population);
-        long endTime = System.currentTimeMillis() - processingStartTime;
-        String endTimeString = String.format("%d minutes, %d seconds",
-                TimeUnit.MILLISECONDS.toMinutes(endTime),
-                TimeUnit.MILLISECONDS.toSeconds(endTime) -
-                        TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime))
-        );
-        System.out.println("Processed generations: " + currGen + ". Processing time: " + endTimeString + ".\nBest archived fitness: " + bestSubject.getFitness() + ".");
 
-        System.out.println("Best individual in population:");
-        System.out.println(bestSubject.toString());
+        if(configuration.printBestFitnessEvolution)
+            bestFitnessList.add(bestSubject.getFitness());
+
+        if(configuration.printEndingInformation) {
+            long endTime = System.currentTimeMillis() - processingStartTime;
+            String endTimeString = String.format("%d minutes, %d seconds",
+                    TimeUnit.MILLISECONDS.toMinutes(endTime),
+                    TimeUnit.MILLISECONDS.toSeconds(endTime) -
+                            TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime))
+            );
+            System.out.println("Processed generations: " + currGen + ". Processing time: " + endTimeString + ".\nBest archived fitness: " + bestSubject.getFitness() + ".");
+
+            System.out.println("Best individual in population:");
+            System.out.println(bestSubject.toString());
+        }
+
+        if(configuration.printBestFitnessEvolution) {
+            StringBuilder sb = new StringBuilder();
+            sb.append("Best fitness evolution: [");
+            for(int i = 0; i < bestFitnessList.size(); i++) {
+                sb.append(bestFitnessList.get(i));
+                if(i < bestFitnessList.size() - 1)
+                    sb.append(", ");
+            }
+            sb.append("].");
+
+            System.out.println(sb.toString());
+        }
     }
 }

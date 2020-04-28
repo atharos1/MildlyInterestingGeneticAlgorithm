@@ -1,10 +1,21 @@
 {
     "implementationParameters": {
-        "itemsPath": "items/full",
-        "fixedProperties": {
-            "class": "warrior"
-        }
+        "itemsPath": "items/full"
     },
+    "fixedProperties": [
+        {
+            "propertyIndex": 1,
+            "value": "warrior"
+        },
+        {
+            "propertyIndex": 0,
+            "value": 1.6
+        },
+        {
+            "propertyIndex": 4,
+            "value": 7
+        }
+    ],
     "propertiesComparatorDeltas": [
         {
             "propertyIndex": 0,
