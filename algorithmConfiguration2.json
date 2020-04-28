@@ -1,7 +1,7 @@
 {
     "generationSize": 3000,
     "cantChildren": 1000,
-    "printBestOnEachGeneration": true,
+    "printBestOnEachGeneration": false,
     "mutationMethods": [
         {
             "name": "singleGene",
@@ -39,7 +39,7 @@
             }
         },
         "method1Proportion": 0.7,
-        "fillMethod": "all"
+        "fillMethod": "parent"
     },
     "finishCriteria": [
         {

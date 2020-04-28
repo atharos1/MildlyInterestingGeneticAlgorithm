@@ -56,12 +56,6 @@ public class Main {
         mutations.put("complete", CompleteMutation.class);
     }
 
-
-
-    static void loadConfiguration(String configurationFile) {
-
-    }
-
     public static void main(String[] args) throws IOException, InvocationTargetException, NoSuchMethodException, InstantiationException, IllegalAccessException {
         if(args.length < 1) {
             System.err.println("Algorithm configuration file path is not optional.");
@@ -73,8 +67,8 @@ public class Main {
         Configuration configuration = new Configuration(args[0]);
 
         //Witness explicita la clase que implementa GeneticSubject
-        GeneticSubject witness = new Message();
-        //GeneticSubject witness = new Character();
+        //GeneticSubject witness = new Message();
+        GeneticSubject witness = new Character();
         if(args.length >= 2)
             witness.loadConfigurationFromFile(args[1]);
 
