@@ -58,7 +58,7 @@ public class Message extends GeneticSubject {
 
         char char1 = (char)getProperty(propertyIndex);
         char char2 = (char)gs.getProperty(propertyIndex);
-        return Character.compare(char1, char2);
+        return char1 - char2;
     }
 
     @Override

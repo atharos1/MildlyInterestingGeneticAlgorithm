@@ -208,7 +208,7 @@ public class Character extends GeneticSubject {
             return 0;
 
         if(propertyIndex == PropertiesEnum.HEIGHT.val)
-            return Double.compare((double)getProperty(propertyIndex), (double)gs.getProperty(propertyIndex));
+            return (double)getProperty(propertyIndex) - (double)gs.getProperty(propertyIndex);
         else if(propertyIndex == PropertiesEnum.CLASS.val)
             return (ClassEnum)getProperty(propertyIndex) == (ClassEnum)gs.getProperty(propertyIndex) ? 0 : 1;
         else if(propertyIndex >= PropertiesEnum.FIRST_ITEM.val) {
@@ -218,7 +218,7 @@ public class Character extends GeneticSubject {
             Item i2 = (Item)gs.getProperty(propertyIndex);
             double fitness2 = charClass.getFitness(calculateAttack(i2.getAgility(), i2.getDexterity(), i2.getStrength(), 1.0), calculateDefense(i2.getResistance(), i2.getDexterity(), i2.getLife(), 1.0));
 
-            return Double.compare(fitness1, fitness2);
+            return fitness1 - fitness2;
         }
 
         return 0;
