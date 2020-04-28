@@ -1,0 +1,58 @@
+{
+    "generationSize": 3000,
+    "cantChildren": 1000,
+    "printBestOnEachGeneration": true,
+    "mutationMethods": [
+        {
+            "name": "singleGene",
+            "probability": 0.25
+        },
+        {
+            "name": "complete",
+            "probability": 0.05
+        }
+    ],
+    "crossoverMethod": {
+        "name": "anular"
+    },
+    "parentSelectionMethods": {
+        "method1": {
+            "name": "elite",
+            "parameters": {
+                "randomSubsetSize": 200
+            }
+        },
+        "method2": {
+            "name": "elite"
+        },
+        "method1Proportion": 1
+    },
+    "nextGenerationSelectionMethods": {
+        "method1": {
+            "name": "elite"
+        },
+        "method2": {
+            "name": "boltzmann",
+            "parameters": {
+                "T0": 10,
+                "Tc": 2
+            }
+        },
+        "method1Proportion": 1,
+        "fillMethod": "parent"
+    },
+    "finishCriteria": [
+        {
+            "name": "time",
+            "parameters": {
+                "durationSeconds": 50
+            }
+        },
+        {
+            "name": "content",
+            "parameters": {
+                "generationsWithoutImprovementToFinish": 25
+            }
+        }
+    ]
+}
