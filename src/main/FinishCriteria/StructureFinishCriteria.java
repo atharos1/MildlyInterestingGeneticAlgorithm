@@ -26,7 +26,7 @@ public class StructureFinishCriteria implements FinishCriteria {
                 GeneticSubject s1 = thisGeneration.get(i);
                 GeneticSubject s2 = lastGeneration.get(i);
                 for(int prop = 0; prop < thisGeneration.get(0).getPropertyCount(); prop++) {
-                    if(!s1.isPropertySimilarWith(s2, i)) {
+                    if(!s1.isPropertySimilarWith(s2, prop)) {
                         currComparableGeneration = 0;
                         lastGeneration = thisGeneration;
                         return false;
