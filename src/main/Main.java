@@ -62,30 +62,40 @@ public class Main {
             System.exit(-1);
         }
 
+        System.out.println("Loading dependencies...");
         loadGeneticAlgorithmDependencies();
+        System.out.println("Dependencies loaded.\n");
 
+        System.out.println("Loading algorithm configuration...");
         Configuration configuration = new Configuration(args[0]);
+        System.out.println("Algorithm configuration loaded.\n");
 
         //Witness explicita la clase que implementa GeneticSubject
         //GeneticSubject witness = new Message();
         GeneticSubject witness = new Character();
-        if(args.length >= 2)
+        if(args.length >= 2) {
+            System.out.println("Loading implementation-specific GeneticSubject configuration...");
             witness.loadConfigurationFromFile(args[1]);
+            System.out.println("Implementation-specific GeneticSubject configuration loaded.\n");
+        }
 
+        System.out.println("Creating random initial population...");
         //GENERACIÓN DE LA POBLACIÓN INICIAL
         List<GeneticSubject> population = new ArrayList<>();
         for (int i = 0; i < configuration.generationSize; i++)
             population.add(witness.getRandom());
+        System.out.println("Random initial population created.\n");
 
-        long startTime = System.currentTimeMillis();
+        System.out.println("Evolution started.\n");
+        long processingStartTime = System.currentTimeMillis();
 
         long currGen = 0;
         boolean shouldContinue = true;
         while(shouldContinue) {
             if(configuration.printBestOnEachGeneration) {
                 GeneticSubject bestSubject = Collections.min(population);
-                System.out.println("Generation " + currGen + ". Best archived fitness:" + bestSubject.getFitness() + ".");
-                System.out.println(bestSubject.toString() + "\n");
+                System.out.println("Generation " + currGen + ". Best archived fitness: " + bestSubject.getFitness() + ".");
+                System.out.println(bestSubject.toString());
             }
 
             //Selecciono configuration.cantChildren padres
@@ -162,7 +172,7 @@ public class Main {
         }
 
         GeneticSubject bestSubject = Collections.min(population);
-        long endTime = System.currentTimeMillis() - startTime;
+        long endTime = System.currentTimeMillis() - processingStartTime;
         String endTimeString = String.format("%d minutes, %d seconds",
                 TimeUnit.MILLISECONDS.toMinutes(endTime),
                 TimeUnit.MILLISECONDS.toSeconds(endTime) -
