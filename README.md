@@ -100,13 +100,13 @@ This is an implementation-specific second configuration file structure, written 
 >
 >>_**itemsPath**_ (String, A valid path from the program's working directory): Path to the folder that contains items's _tsb_ files. Each file will account from an item type, and consequently, a new _Character_ property.
 >
->>_**fixedProperties**_ (Array of Objects): Allows for _Character_ properties to be fixed to a value through the program's execution.
+>>_**fixedProperties**_ (Array of Objects, up to one per custom-implementation _GeneticSubject_ property): Allows for _Character_ properties to be fixed to a value through the program's execution.
 >>_**propertyIndex**_ (_#Properties_ > Integer > 0): defines the property that the tolerance is defined for.
 >
 >>_**delta**_ (Double > 0): defines the tolerance value.
 
 
->_**propertiesComparatorDeltas**_ (Array of Objects, one per custom-implementation _GeneticSubject_ property): defines the tolerance, or delta, that is used to decide if two non-equal values of the same property are similar. Each object in the array is defined as follows.
+>_**propertiesComparatorDeltas**_ (Array of Objects, up to one per custom-implementation _GeneticSubject_ property): defines the tolerance, or delta, that is used to decide if two non-equal values of the same property are similar. Each object in the array is defined as follows.
 >>_**propertyIndex**_ (_#Properties_ > Integer > 0): defines the property that the tolerance is defined for.
 >
 >>_**value**_ (Implemented property's type, String for _charClass_): defines fixed property's value.
