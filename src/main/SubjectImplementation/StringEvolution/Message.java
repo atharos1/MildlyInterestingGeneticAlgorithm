@@ -68,7 +68,7 @@ public class Message extends GeneticSubject {
 
         double propertyDelta = propertyComparatorDeltas.getOrDefault(propertyIndex, 0.0);
 
-        return Double.compare(comparePropertyWith(gs, propertyIndex), propertyDelta) <= 0;
+        return Double.compare(Math.abs(comparePropertyWith(gs, propertyIndex)), propertyDelta) <= 0;
     }
 
     @Override
