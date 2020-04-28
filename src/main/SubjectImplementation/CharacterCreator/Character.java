@@ -36,7 +36,7 @@ public class Character extends GeneticSubject {
 
     private ClassEnum charClass = null;
 
-    private float height = 0;
+    private double height = 0;
     private double ATM = 0;
     private double DEM = 0;
 
@@ -128,8 +128,8 @@ public class Character extends GeneticSubject {
         fitness = calculateFitness();
     }
 
-    public static float getHeightRandom() {
-        return MIN_HEIGHT + random.nextFloat() * (MAX_HEIGHT - MIN_HEIGHT);
+    public static double getHeightRandom() {
+        return MIN_HEIGHT + random.nextDouble() * (MAX_HEIGHT - MIN_HEIGHT);
     }
 
     public static ClassEnum getClassRandom() {
@@ -247,7 +247,7 @@ public class Character extends GeneticSubject {
     @Override
     public void setProperty(int propertyIndex, Object value) {
         if(propertyIndex == PropertiesEnum.HEIGHT.val)
-            this.height = (float)value;
+            this.height = (double)value;
         else if(propertyIndex == PropertiesEnum.CLASS.val)
             this.charClass = (ClassEnum)value;
         else if(propertyIndex >= PropertiesEnum.FIRST_ITEM.val)

@@ -67,8 +67,8 @@ public class Main {
         Configuration configuration = new Configuration(args[0]);
 
         //Witness explicita la clase que implementa GeneticSubject
-        GeneticSubject witness = new Message();
-        //GeneticSubject witness = new Character();
+        //GeneticSubject witness = new Message();
+        GeneticSubject witness = new Character();
         if(args.length >= 2)
             witness.loadConfigurationFromFile(args[1]);
 
@@ -83,16 +83,9 @@ public class Main {
         boolean shouldContinue = true;
         while(shouldContinue) {
             if(configuration.printBestOnEachGeneration) {
-                List<GeneticSubject> l = new ArrayList<>(population);
-                Collections.sort(l);
-                for(int i = 0; i < 4; i++) {
-                    GeneticSubject bestSubject = l.get(i);
-                    System.out.println("Generation " + currGen + ". Best archived fitness:" + bestSubject.getFitness() + ".");
-                    System.out.println(bestSubject.toString() + "\n");
-                }
-                /*GeneticSubject bestSubject = Collections.min(population);
+                GeneticSubject bestSubject = Collections.min(population);
                 System.out.println("Generation " + currGen + ". Best archived fitness:" + bestSubject.getFitness() + ".");
-                System.out.println(bestSubject.toString() + "\n");*/
+                System.out.println(bestSubject.toString() + "\n");
             }
 
             //Selecciono configuration.cantChildren padres
@@ -175,7 +168,7 @@ public class Main {
                 TimeUnit.MILLISECONDS.toSeconds(endTime) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime))
         );
-        System.out.println("Processed generations: " + currGen + ". Processing time: " + endTimeString + ".\nBest archived fitness:" + bestSubject.getFitness() + ".");
+        System.out.println("Processed generations: " + currGen + ". Processing time: " + endTimeString + ".\nBest archived fitness: " + bestSubject.getFitness() + ".");
 
         System.out.println("Best individual in population:");
         System.out.println(bestSubject.toString());
