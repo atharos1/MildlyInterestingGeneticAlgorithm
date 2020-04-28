@@ -1,12 +1,17 @@
 package main.SubjectImplementation.StringEvolution;
 
 import main.GeneticSubject;
+import main.SubjectImplementation.CharacterCreator.Character;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 public class Message extends GeneticSubject {
     private static char[] desiredString = "No soy Elliot, hijo consentido de Mira y Jack Christensen. Tampoco soy David Morales, actor de reparto en la perversa ficción de Crisanto Rojas. No soy ninguno, y soy ambos.\nSoy yo.\nY voy a estar bien.".toCharArray();
     private char[] currentString;
+
+    private static Map<Integer, Double> propertyComparatorDeltas = new HashMap<>();
 
     private static final char[] alphabet = {'a','b','c','d','e','f','g','h','i','j','k','l','m','n','ñ','o','p','q','r','s','t','u','v','w','x','y','z','A','B','C','D','E','F','G','H','I','J','K','L','M','N','Ñ','O','P','Q','R','S','T','U','V','W','X','Y','Z','á','é','i','ó','ú','Á','É','Í','Ó','Ú','¿','?','¡','!','.',',',' ', '\n'};
 
@@ -44,6 +49,25 @@ public class Message extends GeneticSubject {
     @Override
     public int getRandomUnfixedPropertyIndex() {
         return GeneticSubject.random.nextInt(currentString.length);
+    }
+
+    @Override
+    public double comparePropertyWith(GeneticSubject gs, int propertyIndex) {
+        if(!(gs instanceof Message) || propertyIndex >= getPropertyCount())
+            return 0;
+
+        //TODO hacer
+        return 0;
+    }
+
+    @Override
+    public boolean isPropertySimilarWith(GeneticSubject gs, int propertyIndex) {
+        if(!(gs instanceof Character) || propertyIndex >= getPropertyCount())
+            return false;
+
+        double propertyDelta = propertyComparatorDeltas.getOrDefault(propertyIndex, 0.0);
+
+        return comparePropertyWith(gs, propertyIndex) <= propertyDelta;
     }
 
     @Override

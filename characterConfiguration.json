@@ -1,6 +1,14 @@
 {
-    "itemsPath": "items/full",
-    "fixedProperties": {
-        "class": "archer"
-    }
+    "implementationParameters": {
+        "itemsPath": "items/test",
+        "fixedProperties": {
+            "class": "archer"
+        }
+    },
+    "propertiesComparatorDeltas": [
+        {
+            "propertyIndex": 0,
+            "delta": 0.5
+        }
+    ]
 }

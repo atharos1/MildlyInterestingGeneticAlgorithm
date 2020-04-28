@@ -31,7 +31,8 @@ public class Character extends GeneticSubject {
         }
     }
 
-    protected static Map<Integer, Object> fixedProperties = new HashMap<Integer, Object>();
+    private static Map<Integer, Object> fixedProperties = new HashMap<>();
+    private static Map<Integer, Double> propertyComparatorDeltas = new HashMap<>();
 
     private ClassEnum charClass = null;
 
@@ -73,8 +74,8 @@ public class Character extends GeneticSubject {
         this.ATM = calculateATM();
         this.DEM = calculateDEM();
 
-        this.attack = calculateAttack();
-        this.defense = calculateDefense();
+        this.attack = calculateAttack(agility, dexterity, strength, ATM);
+        this.defense = calculateDefense(resistance, dexterity, life, DEM);
     }
 
     private void onItemChanged() {
@@ -88,14 +89,34 @@ public class Character extends GeneticSubject {
                 this.life += i.getLife();
             }
         }
-        this.strength = 100 * Math.tanh(0.01*this.strength);
-        this.agility = Math.tanh(0.01*this.agility);
-        this.dexterity = 0.6 * Math.tanh(0.01*this.dexterity);
-        this.resistance = Math.tanh(0.01*this.resistance);
-        this.life = 100 * Math.tanh(0.01*this.life);
+        this.strength = processStrength(this.strength);
+        this.agility = processAgility(this.agility);
+        this.dexterity = processDexterity(this.dexterity);
+        this.resistance = processResistance(this.resistance);
+        this.life = processLife(this.life);
 
-        this.attack = calculateAttack();
-        this.defense = calculateDefense();
+        this.attack = calculateAttack(agility, dexterity, strength, ATM);
+        this.defense = calculateDefense(resistance, dexterity, life, DEM);
+    }
+
+    private double processStrength(double strength) {
+        return 100 * Math.tanh(0.01*strength);
+    }
+
+    private double processAgility(double agility) {
+        return Math.tanh(0.01*agility);
+    }
+
+    private double processDexterity(double dexterity) {
+        return 0.6 * Math.tanh(0.01*dexterity);
+    }
+
+    private double processResistance(double resistance) {
+        return Math.tanh(0.01*resistance);
+    }
+
+    private double processLife(double life) {
+        return 100 * Math.tanh(0.01*life);
     }
 
     private void onPropertyChanged(int index) {
@@ -124,12 +145,12 @@ public class Character extends GeneticSubject {
     }
 
     //Métodos internos para el cálculo de atributos
-    private double calculateAttack() {
-        return (agility + dexterity) * strength * ATM;
+    private double calculateAttack(double agility, double dexterity, double strength, double factor) {
+        return (agility + dexterity) * strength * factor;
     }
 
-    private double calculateDefense() {
-        return (resistance + dexterity) * life * DEM;
+    private double calculateDefense(double resistance, double dexterity, double life, double factor) {
+        return (resistance + dexterity) * life * factor;
     }
 
     private double calculateATM() {
@@ -179,6 +200,38 @@ public class Character extends GeneticSubject {
             if(!isPropertyFixed(propertyIndex))
                 return propertyIndex;
         }
+    }
+
+    @Override
+    public double comparePropertyWith(GeneticSubject gs, int propertyIndex) {
+        if(!(gs instanceof Character) || propertyIndex >= getPropertyCount())
+            return 0;
+
+        if(propertyIndex == PropertiesEnum.HEIGHT.val)
+            return Double.compare((double)getProperty(propertyIndex), (double)gs.getProperty(propertyIndex));
+        else if(propertyIndex == PropertiesEnum.CLASS.val)
+            return (ClassEnum)getProperty(propertyIndex) == (ClassEnum)gs.getProperty(propertyIndex) ? 0 : 1;
+        else if(propertyIndex >= PropertiesEnum.FIRST_ITEM.val) {
+            Item i1 = (Item)getProperty(propertyIndex);
+            double fitness1 = charClass.getFitness(calculateAttack(i1.getAgility(), i1.getDexterity(), i1.getStrength(), 1.0), calculateDefense(i1.getResistance(), i1.getDexterity(), i1.getLife(), 1.0));
+
+            Item i2 = (Item)gs.getProperty(propertyIndex);
+            double fitness2 = charClass.getFitness(calculateAttack(i2.getAgility(), i2.getDexterity(), i2.getStrength(), 1.0), calculateDefense(i2.getResistance(), i2.getDexterity(), i2.getLife(), 1.0));
+
+            return Double.compare(fitness1, fitness2);
+        }
+
+        return 0;
+    }
+
+    @Override
+    public boolean isPropertySimilarWith(GeneticSubject gs, int propertyIndex) {
+        if(!(gs instanceof Character) || propertyIndex >= getPropertyCount())
+            return false;
+
+        double propertyDelta = propertyComparatorDeltas.getOrDefault(propertyIndex, 0.0);
+
+        return comparePropertyWith(gs, propertyIndex) <= propertyDelta;
     }
 
     @Override
@@ -263,26 +316,36 @@ public class Character extends GeneticSubject {
         String json = new String(Files.readAllBytes(Paths.get(configurationFile)));
         JSONObject o = new JSONObject(json);
 
-        Item.loadItemsFromTSB(o.getString("itemsPath"));
+        JSONObject implementationParameters = o.getJSONObject("implementationParameters");
 
-        if(!o.has("fixedProperties"))
+        Item.loadItemsFromTSB(implementationParameters.getString("itemsPath"));
+
+        if(implementationParameters.has("fixedProperties")) {
+            JSONObject fixedProperties = implementationParameters.getJSONObject("fixedProperties");
+            if(fixedProperties.has("class")) {
+                ClassEnum c = ClassEnum.getByName(fixedProperties.getString("class"));
+                if(c == null) throw new IllegalArgumentException("Invalid class name");
+
+                setFixedProperty(PropertiesEnum.CLASS.val, c);
+            }
+            if(fixedProperties.has("height"))
+                setFixedProperty(PropertiesEnum.HEIGHT.val, fixedProperties.getFloat("height"));
+            if(fixedProperties.has("items")) {
+                JSONArray fixedItems = fixedProperties.getJSONArray("items");
+                for(int i = 0; i < fixedItems.length(); i++) {
+                    JSONObject item = fixedItems.getJSONObject(i);
+                    setFixedProperty(PropertiesEnum.FIRST_ITEM.val + item.getInt("typeId"), item.getInt("itemId"));
+                }
+            }
+        }
+
+        if(!o.has("propertiesComparatorDeltas"))
             return;
 
-        JSONObject fixedProperties = o.getJSONObject("fixedProperties");
-        if(fixedProperties.has("class")) {
-            ClassEnum c = ClassEnum.getByName(fixedProperties.getString("class"));
-            if(c == null) throw new IllegalArgumentException("Invalid class name");
-
-            setFixedProperty(PropertiesEnum.CLASS.val, c);
-        }
-        if(fixedProperties.has("height"))
-            setFixedProperty(PropertiesEnum.HEIGHT.val, fixedProperties.getFloat("height"));
-        if(fixedProperties.has("items")) {
-            JSONArray fixedItems = fixedProperties.getJSONArray("items");
-            for(int i = 0; i < fixedItems.length(); i++) {
-                JSONObject item = fixedItems.getJSONObject(i);
-                setFixedProperty(PropertiesEnum.FIRST_ITEM.val + item.getInt("typeId"), item.getInt("itemId"));
-            }
+        JSONArray propertiesComparatorDeltasArray = o.getJSONArray("propertiesComparatorDeltas");
+        for(int i = 0; i < propertiesComparatorDeltasArray.length(); i++) {
+            JSONObject propertyComparatorDelta = propertiesComparatorDeltasArray.getJSONObject(i);
+            propertyComparatorDeltas.put(propertyComparatorDelta.getInt("propertyIndex"), propertyComparatorDelta.getDouble("delta"));
         }
     }
 }

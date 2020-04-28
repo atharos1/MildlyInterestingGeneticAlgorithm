@@ -17,6 +17,8 @@ public abstract class GeneticSubject implements Comparable<GeneticSubject> {
     public abstract int getFixedPropertyCount();
     public abstract int getRandomUnfixedPropertyIndex();
 
+    public abstract double comparePropertyWith(GeneticSubject gs, int propertyIndex);
+    public abstract boolean isPropertySimilarWith(GeneticSubject gs, int propertyIndex);
     public abstract int getPropertyCount();
     public abstract void randomizeProperty(int propertyIndex);
     public abstract void setProperty(int propertyIndex, Object value);
