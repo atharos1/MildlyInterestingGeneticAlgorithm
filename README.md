@@ -1,4 +1,4 @@
-# Mildly Interesting Genetic Algorithm (MIGA)
+# Mildly Interesting Genetic Algorithm (_MIGA_)
 This algorithm uses genetic evolution to optimize any object that extends the _GeneticSubject_ abstract class.
 
 # How does it work
@@ -7,15 +7,15 @@ A valid configuration file and an instance of the implemented _GeneticSubject_ s
 _configuration.generationSize_ random objects will then be produced through the _witness_'s _getRandom_ method. They will constitute the first generation.
 The algorithm's flow is then as follows:
 
- 1. Select _configuration.cantChildren_ parents from the current population through the potentially two parent _Selector_ implementations specified in the configuration file.
- 2. Breed _configuration.cantChildren_ children through the chosen _Crossover_ implementation.
- 3. Apply each of the _mutate_ methods from each of the defined _Mutation_ implementations.
- 4. Select _configuration.generationSize_ parents through the potentially two parent _Selector_ implementations specified in the configuration file. Once chosen, they will substitute the current generation.
-	5.1. If _configuration.fillAll_ is set to _true_, then add the generated children to the current generation and 		choose from all of them.
-	5.2. If _configuration.fillAll_ is set to _true_, attemp to select _configuration.generationSize_ subjects from the generated children with no repetitions. If _configuration.generationSize_ > _configuration.cantChildren_, finish up by selecting an additional (_configuration.generationSize_ - _configuration.cantChildren_) subjects from the current generation.
-6. Check every _FinishCriteria_ implementation provided.
-	6.1. If any of them is met, end the program's executions and potentially print results.
-	6.2. Else, go back to step 1.
+ - Select _configuration.cantChildren_ parents from the current population through the potentially two parent _Selector_ implementations specified in the configuration file. 
+ - Breed _configuration.cantChildren_ children through the chosen _Crossover_ implementation. 
+ - Apply each of the _mutate_ methods from each of the defined _Mutation_ implementations. 
+ - Select _configuration.generationSize_ parents through the potentially two parent _Selector_ implementations specified in the configuration file. Once chosen, they will substitute the current generation.
+	 - If _configuration.fillAll_ is set to _true_, then add the generated children to the current generation and 		choose from all of them. 
+	 - If _configuration.fillAll_ is set to _false_, attemp to select _configuration.generationSize_ subjects from the generated children with no repetitions. If _configuration.generationSize_ > _configuration.cantChildren_, finish up by selecting an additional (_configuration.generationSize_ - _configuration.cantChildren_) subjects from the current generation. 
+ - Check every _FinishCriteria_ implementation provided. 
+	 - If any of them is met, end the program's executions and potentially print results. 
+	 - Else, go back to the first step.
 
 # Compile instructions
 From the project's root folder, run:
