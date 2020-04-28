@@ -30,4 +30,14 @@ public class ContentFinishCriteria implements FinishCriteria {
 
         return currentGenerationsWithoutImprovement == generationsWithoutImprovementToFinish;
     }
+
+    @Override
+    public String toString() {
+        return "Finished after " + generationsWithoutImprovementToFinish + " generations without Fitness improvements.";
+    }
+
+    @Override
+    public String getName() {
+        return "ContentFinishCriteria";
+    }
 }

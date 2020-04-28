@@ -20,4 +20,14 @@ public class TimeFinishCriteria implements FinishCriteria {
 
         return System.currentTimeMillis() - startTimeMillis >= durationMillis;
     }
+
+    @Override
+    public String toString() {
+        return "Finished after processing during " + TimeUnit.MILLISECONDS.toSeconds(durationMillis) + " seconds.";
+    }
+
+    @Override
+    public String getName() {
+        return "TimeFinishCriteria";
+    }
 }

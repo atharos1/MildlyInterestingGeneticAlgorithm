@@ -1,8 +1,8 @@
 {
     "implementationParameters": {
-        "itemsPath": "items/test",
+        "itemsPath": "items/full",
         "fixedProperties": {
-            "class": "archer"
+            "class": "warrior"
         }
     },
     "propertiesComparatorDeltas": [

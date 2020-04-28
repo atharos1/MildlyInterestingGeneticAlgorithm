@@ -43,15 +43,10 @@
     },
     "finishCriteria": [
         {
-            "name": "time",
+            "name": "structure",
             "parameters": {
-                "durationSeconds": 120
-            }
-        },
-        {
-            "name": "content",
-            "parameters": {
-                "generationsWithoutImprovementToFinish": 100
+                "numberOfSubjectsToCompare": 4,
+                "comparableGenerationsBeforeFinish": 3
             }
         }
     ]

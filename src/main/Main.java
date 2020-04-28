@@ -23,12 +23,12 @@ public class Main {
     public static Map<String, Class> mutations = null;
 
     static void loadGeneticAlgorithmDependencies() throws NoSuchMethodException, IllegalAccessException, InvocationTargetException, InstantiationException {
-        //TODO falta estructura
         finishCriteria = new HashMap<>();
         finishCriteria.put("time", TimeFinishCriteria.class);
         finishCriteria.put("generationsCount", GenerationsCountFinishCriteria.class);
         finishCriteria.put("acceptableSolution", AcceptableSolutionFinishCriteria.class);
         finishCriteria.put("content", ContentFinishCriteria.class);
+        finishCriteria.put("structure", StructureFinishCriteria.class);
 
         classes = new HashMap<>();
         for(ClassEnum c : ClassEnum.values())
@@ -67,8 +67,8 @@ public class Main {
         Configuration configuration = new Configuration(args[0]);
 
         //Witness explicita la clase que implementa GeneticSubject
-        //GeneticSubject witness = new Message();
-        GeneticSubject witness = new Character();
+        GeneticSubject witness = new Message();
+        //GeneticSubject witness = new Character();
         if(args.length >= 2)
             witness.loadConfigurationFromFile(args[1]);
 
@@ -79,8 +79,22 @@ public class Main {
 
         long startTime = System.currentTimeMillis();
 
+        long currGen = 0;
         boolean shouldContinue = true;
         while(shouldContinue) {
+            if(configuration.printBestOnEachGeneration) {
+                List<GeneticSubject> l = new ArrayList<>(population);
+                Collections.sort(l);
+                for(int i = 0; i < 4; i++) {
+                    GeneticSubject bestSubject = l.get(i);
+                    System.out.println("Generation " + currGen + ". Best archived fitness:" + bestSubject.getFitness() + ".");
+                    System.out.println(bestSubject.toString() + "\n");
+                }
+                /*GeneticSubject bestSubject = Collections.min(population);
+                System.out.println("Generation " + currGen + ". Best archived fitness:" + bestSubject.getFitness() + ".");
+                System.out.println(bestSubject.toString() + "\n");*/
+            }
+
             //Selecciono configuration.cantChildren padres
             List<GeneticSubject> parentList = configuration.parentSelector1.select(population, (int) Math.ceil(configuration.cantChildren * configuration.parentSelector1Proportion));
 
@@ -140,28 +154,30 @@ public class Main {
             for(FinishCriteria f : configuration.finishCriteria) {
                 if (f.shouldFinish(population)) {
                     shouldContinue = false;
+
+                    if(configuration.printBestOnEachGeneration)
+                        System.out.println("--------------------------------\n");
+
+                    System.out.println("Finishing criteria " + f.getName() + " was met. Processing stopped.");
+                    System.out.println(f.toString());
+
                     break;
                 }
             }
 
-            if(shouldContinue && configuration.printBestOnEachGeneration)
-                System.out.println(Collections.min(population).toString());
+            currGen++;
         }
 
-        if(configuration.printBestOnEachGeneration)
-            System.out.println();
-
+        GeneticSubject bestSubject = Collections.min(population);
         long endTime = System.currentTimeMillis() - startTime;
         String endTimeString = String.format("%d minutes, %d seconds",
                 TimeUnit.MILLISECONDS.toMinutes(endTime),
                 TimeUnit.MILLISECONDS.toSeconds(endTime) -
                         TimeUnit.MINUTES.toSeconds(TimeUnit.MILLISECONDS.toMinutes(endTime))
         );
-        System.out.println("Finish. Processing time: " + endTimeString);
+        System.out.println("Processed generations: " + currGen + ". Processing time: " + endTimeString + ".\nBest archived fitness:" + bestSubject.getFitness() + ".");
 
-        System.out.println("\nBest individual in population:");
-        GeneticSubject bestSubject = Collections.min(population);
-
+        System.out.println("Best individual in population:");
         System.out.println(bestSubject.toString());
     }
 }

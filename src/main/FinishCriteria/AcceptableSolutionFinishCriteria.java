@@ -17,4 +17,14 @@ public class AcceptableSolutionFinishCriteria implements FinishCriteria {
     public boolean shouldFinish(List<GeneticSubject> population) {
         return Collections.min(population).getFitness() >= acceptableFitness;
     }
+
+    @Override
+    public String toString() {
+        return "Finished after fitness surpassed acceptable value of " + acceptableFitness + ".";
+    }
+
+    @Override
+    public String getName() {
+        return "AcceptableSolutionFinishCriteria";
+    }
 }

@@ -66,7 +66,6 @@ public class Configuration {
         }
 
 
-
         try {
             mutationMethods = new ArrayList<>();
             if(o.has("mutationMethods")) {
@@ -167,11 +166,15 @@ public class Configuration {
                 } else if(name.equals("acceptableSolution")) {
                     double acceptableFitness = parameters.getDouble("acceptableFitness");
                     f = (FinishCriteria)Main.finishCriteria.get(name).getDeclaredConstructor(double.class).newInstance(acceptableFitness);
+                } else if(name.equals("structure")) {
+                    int numberOfSubjectsToCompare = parameters.getInt("numberOfSubjectsToCompare");
+                    int comparableGenerationsBeforeFinish = parameters.getInt("comparableGenerationsBeforeFinish");
+                    f = (FinishCriteria)Main.finishCriteria.get(name).getDeclaredConstructor(int.class, int.class).newInstance(numberOfSubjectsToCompare, comparableGenerationsBeforeFinish);
                 }
                 finishCriteria.add(f);
             }
         } catch (Exception e) {
-            System.err.println("Error finish criteria configuration.");
+            System.err.println("Error reading criteria configuration.");
             System.exit(-1);
         }
     }

@@ -231,7 +231,7 @@ public class Character extends GeneticSubject {
 
         double propertyDelta = propertyComparatorDeltas.getOrDefault(propertyIndex, 0.0);
 
-        return comparePropertyWith(gs, propertyIndex) <= propertyDelta;
+        return Double.compare(comparePropertyWith(gs, propertyIndex), propertyDelta) <= 0;
     }
 
     @Override
@@ -297,7 +297,6 @@ public class Character extends GeneticSubject {
         sb.append("Height: " + height + "\n");
         for(int i = 0; i < items.length; i++)
             sb.append("Item " + i + ". " + items[i].toString() + "\n");
-        sb.append("Fitness: " + fitness);
 
         return sb.toString();
     }

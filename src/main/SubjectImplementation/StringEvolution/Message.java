@@ -1,7 +1,6 @@
 package main.SubjectImplementation.StringEvolution;
 
 import main.GeneticSubject;
-import main.SubjectImplementation.CharacterCreator.Character;
 
 import java.io.IOException;
 import java.util.HashMap;
@@ -9,6 +8,7 @@ import java.util.Map;
 
 public class Message extends GeneticSubject {
     private static char[] desiredString = "No soy Elliot, hijo consentido de Mira y Jack Christensen. Tampoco soy David Morales, actor de reparto en la perversa ficción de Crisanto Rojas. No soy ninguno, y soy ambos.\nSoy yo.\nY voy a estar bien.".toCharArray();
+    //private static char[] desiredString = "Hey!".toCharArray();
     private char[] currentString;
 
     private static Map<Integer, Double> propertyComparatorDeltas = new HashMap<>();
@@ -33,7 +33,7 @@ public class Message extends GeneticSubject {
 
     @Override
     public int getPropertyCount() {
-        return currentString.length;
+        return desiredString.length;
     }
 
     @Override
@@ -56,18 +56,19 @@ public class Message extends GeneticSubject {
         if(!(gs instanceof Message) || propertyIndex >= getPropertyCount())
             return 0;
 
-        //TODO hacer
-        return 0;
+        char char1 = (char)getProperty(propertyIndex);
+        char char2 = (char)gs.getProperty(propertyIndex);
+        return Character.compare(char1, char2);
     }
 
     @Override
     public boolean isPropertySimilarWith(GeneticSubject gs, int propertyIndex) {
-        if(!(gs instanceof Character) || propertyIndex >= getPropertyCount())
+        if(!(gs instanceof Message) || propertyIndex >= getPropertyCount())
             return false;
 
         double propertyDelta = propertyComparatorDeltas.getOrDefault(propertyIndex, 0.0);
 
-        return comparePropertyWith(gs, propertyIndex) <= propertyDelta;
+        return Double.compare(comparePropertyWith(gs, propertyIndex), propertyDelta) <= 0;
     }
 
     @Override

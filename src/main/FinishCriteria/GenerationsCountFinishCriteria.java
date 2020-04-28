@@ -16,4 +16,14 @@ public class GenerationsCountFinishCriteria implements FinishCriteria {
     public boolean shouldFinish(List<GeneticSubject> population) {
         return maxGeneration == currGeneration++;
     }
+
+    @Override
+    public String toString() {
+        return "Finished after processing " + currGeneration + " generations.";
+    }
+
+    @Override
+    public String getName() {
+        return "GenerationsCountFinishCriteria";
+    }
 }
